@@ -250,7 +250,7 @@ const STEPS=[
 ];
 const BOWL={crack:[.5,.72],milk:[.55,.72],salt:[.6,.62],whisk:[.5,.62]};
 const SOON=['Бутерброд с сыром','Фруктовый салат','Ленивая овсянка','Смузи','Салат из овощей','Морковка с яблоком','Варёное яйцо','Каша на молоке','Гренки','Макароны с сыром','Блинчики','Сырники','Картофельное пюре','Овощной суп','Наггетсы','Паста с томатами','Пицца','Банановые кексы','Шарлотка'];
-const FUN=[{t:'Попробовать сырую смесь',e:'🙅',msg:'Сырые яйца не пробуем — в них могут быть микробы. Пробовать будем готовый омлет.'},{t:'Включить плиту на максимум',e:'🔥',msg:'Сильный огонь сожжёт омлет снизу, а внутри он останется сырым. Огонь средний — и включает его взрослый.'}];
+const FUN=[{t:'Попробовать сырую смесь',e:'🙅',ck:'c-fun0',fk:'fun0',msg:'Сырые яйца не пробуем — в них могут быть микробы. Пробовать будем готовый омлет.'},{t:'Включить плиту на максимум',e:'🔥',ck:'c-fun1',fk:'fun1',msg:'Сильный огонь сожжёт омлет снизу, а внутри он останется сырым. Огонь средний — и включает его взрослый.'}];
 
 /* ============ СОСТОЯНИЕ ============ */
 const $=s=>document.querySelector(s);
@@ -261,15 +261,22 @@ const G={mode:'learn',phase:'',i:-1,taken:[],wrongFridge:0,mistakes:0,flySpoils:
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
 const img=n=>`art/${n}.webp`;
-const SPOILS=['Муха села в миску! На лапках у мух микробы. Если отходишь от еды — накрой миску тарелкой.','Муха побывала в еде. Шефы не оставляют миски открытыми.'];
+const SPOILS=['Муха побывала в еде. Шефы не оставляют миски открытыми.','Муха села в миску! На лапках у мух микробы. Если отходишь от еды — накрой миску тарелкой.'];
 
 /* ============ ГОЛОС ============ */
 let ruVoice=null;
 function loadVoices(){if(!window.speechSynthesis)return;const v=speechSynthesis.getVoices();ruVoice=v.find(x=>/^ru/i.test(x.lang)&&/Milena|Милена/i.test(x.name))||v.find(x=>/^ru/i.test(x.lang))||null;}
 if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+/* Живой голос шефа: готовые mp3 в voice/<ключ>.mp3, по очереди. Системный голос — только запасной. */
+const VO=new Audio();VO.preload='auto';let VQ=[],voUnlocked=false;
+function unlockVoice(){if(voUnlocked)return;voUnlocked=true;try{VO.src='voice/p2.mp3';VO.muted=true;const pr=VO.play();if(pr)pr.then(()=>{VO.pause();VO.muted=false;VO.currentTime=0;nextVo();}).catch(()=>{VO.muted=false;});}catch(e){VO.muted=false;}}
+document.addEventListener('pointerdown',unlockVoice,{capture:true});document.addEventListener('keydown',unlockVoice,{capture:true});
+function vo(...keys){if(!SAVE.voice)return;VQ=keys.flat().filter(Boolean);try{VO.pause();}catch(e){}if(window.speechSynthesis)speechSynthesis.cancel();nextVo();}
+function nextVo(){if(VO.muted)return;const k=VQ.shift();if(!k)return;VO.src='voice/'+k+'.mp3';const pr=VO.play();if(pr)pr.catch(()=>{});}
+VO.onended=nextVo;
 function speak(t){if(!SAVE.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[«»]/g,'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,''));u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;speechSynthesis.speak(u);}catch(e){}}
 function setVoice(){const b=$('#voiceBtn');b.setAttribute('aria-pressed',SAVE.voice);b.textContent=SAVE.voice?'🔊 Голос':'🔇 Без голоса';}
-$('#voiceBtn').onclick=()=>{SAVE.voice=!SAVE.voice;persist();setVoice();if(!SAVE.voice&&window.speechSynthesis)speechSynthesis.cancel();};
+$('#voiceBtn').onclick=()=>{SAVE.voice=!SAVE.voice;persist();setVoice();if(!SAVE.voice){VQ=[];try{VO.pause();}catch(e){}}};
 
 /* ============ ЭКРАНЫ ============ */
 function show(id){for(const s of ['menu','game','final'])$('#'+s).hidden=s!==id;$('#back').hidden=id==='menu';window.scrollTo(0,0);}
@@ -296,7 +303,7 @@ function chef(title,text,opt={}){
  $('#choices').hidden=true;
  $('#actions').innerHTML='';
  (opt.buttons||[]).forEach(b=>{const e=document.createElement('button');e.className=b.cls||'cta';e.textContent=b.t;e.onclick=b.on;if(b.id)e.id=b.id;$('#actions').appendChild(e);});
- if(opt.say!==false)speak(title+'. '+text+(opt.why?' '+opt.why:''));
+ if(opt.v)vo(opt.v);
 }
 function scene(name,dim){$('#bg').src=img(name);$('#stage').classList.toggle('dim',!!dim);$('#layer').innerHTML='';$('#fx').innerHTML='';}
 function dots(){
@@ -327,8 +334,8 @@ function start(mode){
  scene('kitchen');
  const h=document.createElement('button');h.className='hot';h.style.cssText='left:1%;top:4%;width:29%;height:88%';h.innerHTML='<span>Открыть холодильник</span>';h.onclick=openFridge;
  $('#layer').appendChild(h);
- if(mode==='learn')chef('Сегодня готовим омлет','Привет! Мы на кухне. Сначала соберём продукты. Где они хранятся? Правильно, в холодильнике. Нажми на холодильник и открой его.');
- else chef('Готовишь сам','Сегодня я молчу и только подсказываю, если ошибёшься. Начни с продуктов: открой холодильник.');
+ if(mode==='learn')chef('Сегодня готовим омлет','Привет! Мы на кухне. Сначала соберём продукты. Где они хранятся? Правильно, в холодильнике. Нажми на холодильник и открой его.',{v:'k-learn'});
+ else chef('Готовишь сам','Сегодня я молчу и только подсказываю, если ошибёшься. Начни с продуктов: открой холодильник.',{v:'k-solo'});
 }
 function openFridge(){
  G.phase='fridge';scene('fridge');
@@ -340,28 +347,28 @@ function openFridge(){
   $('#layer').appendChild(b);
  }
  const tray=document.createElement('div');tray.className='tray';tray.innerHTML='<div class="slot">?</div><div class="slot">?</div><div class="slot">?</div>';$('#layer').appendChild(tray);
- if(G.mode==='learn')chef('Что нужно для омлета?','Нам нужны три продукта: яйца, молоко и сливочное масло. Найди их на полках и возьми.',{why:'Соль хранится не в холодильнике, а на полке — она уже ждёт на столе.'});
- else chef('Возьми продукты','Какие три продукта из холодильника нужны для омлета?');
+ if(G.mode==='learn')chef('Что нужно для омлета?','Нам нужны три продукта: яйца, молоко и сливочное масло. Найди их на полках и возьми.',{why:'Соль хранится не в холодильнике, а на полке — она уже ждёт на столе.',v:'f-learn'});
+ else chef('Возьми продукты','Какие три продукта из холодильника нужны для омлета?',{v:'f-solo'});
 }
 function takeItem(it,b){
  if(G.phase!=='fridge')return;
  if(!it.need){
   b.classList.remove('no');void b.offsetWidth;b.classList.add('no');G.wrongFridge++;
-  chef('Не то',it.no,{oops:true});return;
+  chef('Не то',it.no,{oops:true,v:'no-'+it.id});return;
  }
  b.classList.add('taken');G.taken.push(it.id);
  const slots=document.querySelectorAll('.tray .slot');const s=slots[G.taken.length-1];
  s.classList.add('full');s.innerHTML=`<img src="${img('i-'+it.id)}" alt="">`;
- if(G.taken.length<3){chef('Взяли: '+it.name,G.mode==='learn'?`Отлично! Осталось: ${FRIDGE.filter(f=>f.need&&!G.taken.includes(f.id)).map(f=>f.name).join(' и ')}.`:'Отлично. Что ещё?',{yay:true});return;}
+ if(G.taken.length<3){chef('Взяли: '+it.name,G.mode==='learn'?`Отлично! Осталось: ${FRIDGE.filter(f=>f.need&&!G.taken.includes(f.id)).map(f=>f.name).join(' и ')}.`:'Отлично. Что ещё?',{yay:true,v:'got-'+it.id});return;}
  G.phase='fridgeDone';
- chef('Всё есть!','Яйца, молоко и масло у нас. Закрывай холодильник — холод бережёт продукты, дверцу долго не держим открытой.',{yay:true,buttons:[{t:'Закрыть холодильник',on:toTable}]});
+ chef('Всё есть!','Яйца, молоко и масло у нас. Закрывай холодильник — холод бережёт продукты, дверцу долго не держим открытой.',{yay:true,v:'f-done',buttons:[{t:'Закрыть холодильник',on:toTable}]});
 }
 function toTable(){
  G.phase='table';scene('kitchen');
  const put=[['eggs',.46,.76,.14],['milk',.58,.74,.055],['butter',.68,.77,.1],['salt',.38,.77,.08]];
  put.forEach(([id,x,y,w],k)=>setTimeout(()=>{const d=document.createElement('div');d.className='onboard';d.style.cssText=`left:${x*100}%;top:${y*100}%;width:${w*100}%`;d.innerHTML=`<img src="${img('i-'+id)}" alt="">`;$('#layer').appendChild(d);},k*180));
- if(G.mode==='learn')chef('Всё на столе','Продукты, соль, миска и сковорода — всё под рукой. Шефы всегда сначала всё раскладывают, а потом начинают. Теперь — по шагам. Я показываю, ты повторяешь.',{buttons:[{t:'Дальше',on:()=>nextStep()}]});
- else chef('Всё на столе','Продукты готовы. Что делаешь первым?',{buttons:[{t:'Дальше',on:()=>nextStep()}]});
+ if(G.mode==='learn')chef('Всё на столе','Продукты, соль, миска и сковорода — всё под рукой. Шефы всегда сначала всё раскладывают, а потом начинают. Теперь — по шагам. Я показываю, ты повторяешь.',{v:'t-learn',buttons:[{t:'Дальше',on:()=>nextStep()}]});
+ else chef('Всё на столе','Продукты готовы. Что делаешь первым?',{v:'t-solo',buttons:[{t:'Дальше',on:()=>nextStep()}]});
 }
 
 /* ============ ШАГИ ============ */
@@ -372,7 +379,7 @@ function nextStep(){
 }
 function teach(s){
  G.phase='show';scene(s.img,true);
- chef(s.t,s.show,{why:s.why,adult:s.adult,buttons:[{t:'Моя очередь',on:()=>doStep(s)},{t:'🔊 Ещё раз',cls:'ghost',on:()=>speak(s.t+'. '+s.show)}]});
+ chef(s.t,s.show,{why:s.why,adult:s.adult,v:'s-'+s.id,buttons:[{t:'Моя очередь',on:()=>doStep(s)},{t:'🔊 Ещё раз',cls:'ghost',on:()=>vo('s-'+s.id)}]});
 }
 function ask(){
  G.phase='ask';const cur=STEPS[G.i];
@@ -383,28 +390,28 @@ function ask(){
  const rest=shuffle(later.slice(1));if(rest.length&&opts.length<3)opts.push(rest[0]);
  const fun=shuffle(FUN.slice());while(opts.length<3)opts.push(fun.pop());
  shuffle(opts);
- chef('Что дальше?','Выбери следующий шаг.',{say:false});
- speak('Что дальше? '+opts.map(o=>o.t).join('? ')+'?');
+ chef('Что дальше?','Выбери следующий шаг. Нажми на картинку.');
+ vo('ask',opts.map(o=>o.id?'c-'+o.id:o.ck));
  const box=$('#choices');box.hidden=false;
  box.innerHTML=opts.map((o,k)=>`<button class="choice" data-k="${k}">${o.img?`<img src="${img(o.img)}" alt="">`:`<div class="ph">${o.e}</div>`}<span>${o.t}</span></button>`).join('');
  box.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
   const o=opts[+b.dataset.k];if(G.phase!=='ask'||b.disabled)return;
-  if(o===cur){b.classList.add('right');G.phase='go';setTimeout(()=>{scene(cur.img);chef(cur.t,cur.do,{adult:cur.adult});doStep(cur,true);},350);}
+  if(o===cur){b.classList.add('right');G.phase='go';setTimeout(()=>{scene(cur.img);chef(cur.t,cur.do,{adult:cur.adult,v:'d-'+cur.id});doStep(cur,true);},350);}
   else{b.classList.add('wrong');b.disabled=true;G.mistakes++;
    const m=o.msg||`«${o.t}» — позже. Сначала: «${cur.t}». ${cur.why}`;
-   $('#cTitle').textContent='Подсказка шефа';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);}
+   $('#cTitle').textContent='Подсказка шефа';$('#cText').textContent=m;$('#chef').classList.add('oops');vo(o.fk||'w-'+cur.id);}
  });
 }
 function doStep(s,keepChef){
  G.phase='do';scene(s.img);
- if(!keepChef)chef(s.t,s.do,{adult:s.adult});
+ if(!keepChef)chef(s.t,s.do,{adult:s.adult,v:'d-'+s.id});
  if(G.flyPlan[s.id])setTimeout(()=>{if(G.phase==='do'&&STEPS[G.i]===s)spawnFly(s);},G.mode==='learn'?1600:rnd(1200,3500));
  ({rub:doRub,tap:doTap,hold:doHold,time:doTime})[s.k](s);
 }
 function stepDone(s){
  if(G.phase!=='do')return;G.phase='done';G.act=null;stopFly();
- const praise=['Получилось!','Как у шефа!','Отлично!','Верно!'][Math.random()*4|0];
- chef(praise,G.mode==='learn'?'Запомни этот шаг: «'+s.t+'».':'Следующий шаг!',{yay:true,say:false});speak(praise);
+ const pk=Math.random()*4|0,praise=['Получилось!','Как у шефа!','Отлично!','Верно!'][pk];
+ chef(praise,G.mode==='learn'?'Запомни этот шаг: «'+s.t+'».':'Следующий шаг!',{yay:true,v:'p'+pk});
  setTimeout(()=>{if(G.phase==='done')nextStep();},1200);
 }
 
@@ -434,13 +441,13 @@ function doHold(s){
  const b=document.createElement('button');b.className='hold';b.textContent='Держи — лить';$('#actions').appendChild(b);
  const down=e=>{e.preventDefault();if(G.phase!=='do')return;a.on=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId);}catch(_){}};
  const up=()=>{if(!a.on)return;a.on=false;b.classList.remove('on');
-  if(a.fill<s.lo){$('#cText').textContent='Пока мало — подержи ещё, до зелёной полоски.';}
+  if(a.fill<s.lo){$('#cText').textContent='Пока мало — подержи ещё, до зелёной полоски.';vo('milk-more');}
   else if(a.fill<=s.hi)stepDone(s);
-  else spill(a,'Перелили! Лишнее молоко сделает омлет водянистым. Начнём сначала — лей медленно.');};
+  else spill(a,'Перелили! Лишнее молоко сделает омлет водянистым. Начнём сначала — лей медленно.','milk-over');};
  b.onpointerdown=down;b.onpointerup=up;b.onpointercancel=up;b.onlostpointercapture=up;
  b.onkeydown=e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)down(e);};b.onkeyup=e=>{if(e.key===' '||e.key==='Enter')up();};
 }
-function spill(a,m){a.fill=0;a.on=false;$('#cTitle').textContent='Ой, многовато';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);}
+function spill(a,m,k){a.fill=0;a.on=false;$('#cTitle').textContent='Ой, многовато';$('#cText').textContent=m;$('#chef').classList.add('oops');vo(k);}
 /* жарить */
 function doTime(s){
  const st=$('#stage');st.onpointerdown=st.onpointermove=st.onpointerup=null;
@@ -449,10 +456,10 @@ function doTime(s){
  const a=G.act={type:'time',s,p:0,R0,R1};
  const b=document.createElement('button');b.className='cta';b.textContent='Готово!';$('#actions').appendChild(b);
  b.onclick=()=>{if(G.phase!=='do')return;
-  if(a.p<R0){$('#cText').textContent='Рано — омлет ещё жидкий сверху. Подожди, пока стрелка дойдёт до зелёного.';speak('Рано, подожди.');}
+  if(a.p<R0){$('#cText').textContent='Рано — омлет ещё жидкий сверху. Подожди, пока стрелка дойдёт до зелёного.';vo('cook-early');}
   else if(a.p<=R1)stepDone(s);else burn(a);};
 }
-function burn(a){a.p=0;$('#cTitle').textContent='Ой!';$('#cText').textContent=a.s.late;$('#chef').classList.add('oops');speak(a.s.late);}
+function burn(a){a.p=0;$('#cTitle').textContent='Ой!';$('#cText').textContent=a.s.late;$('#chef').classList.add('oops');vo('cook-late');}
 
 /* ============ МУХА ============ */
 function spawnFly(s){
@@ -461,9 +468,9 @@ function spawnFly(s){
  const el=document.createElement('div');el.className='fly';el.innerHTML='<img src="art/i-fly.webp" alt="Муха"><b hidden></b>';
  $('#stage').appendChild(el);
  const f=G.fly={el,x:-.1,y:.15,tx,ty,state:'in',t:0};
- el.onpointerdown=e=>{e.stopPropagation();e.preventDefault();if(f.state==='off')return;f.state='off';f.t=0;flash('Кыш! Еда в безопасности');
+ el.onpointerdown=e=>{e.stopPropagation();e.preventDefault();if(f.state==='off')return;f.state='off';f.t=0;flash('Кыш! Еда в безопасности');vo('fly-shoo');
   if(G.mode==='learn'&&!G.flyTaught){G.flyTaught=1;}};
- if(G.mode==='learn'){flash('Муха! Нажми на неё, чтобы прогнать');speak('Ой, муха! Нажми на неё, чтобы прогнать.');}
+ if(G.mode==='learn'){flash('Муха! Нажми на неё, чтобы прогнать');vo('fly');}
 }
 function stopFly(){if(G.fly){G.fly.el.remove();G.fly=null;}}
 function updFly(dt){
@@ -471,7 +478,7 @@ function updFly(dt){
  if(f.state==='in'){const dx=f.tx-f.x,dy=f.ty-f.y,d=Math.hypot(dx,dy);const sp=.28*dt;
   if(d<.01){f.state='land';f.t=0;}else{f.x+=dx/d*Math.min(sp,d)+Math.sin(f.t*12)*.004;f.y+=dy/d*Math.min(sp,d)+Math.cos(f.t*9)*.004;}}
  else if(f.state==='land'){const left=Math.max(0,Math.ceil(4-f.t));const b=f.el.querySelector('b');b.hidden=false;b.textContent='ж-ж… '+left;
-  if(f.t>4){G.flySpoils++;const m=SPOILS[G.flySpoils%2];flash('Муха испачкала еду');$('#cTitle').textContent='Муха в миске!';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);f.state='off';f.t=0;}}
+  if(f.t>4){G.flySpoils++;const m=SPOILS[G.flySpoils%2];flash('Муха испачкала еду');$('#cTitle').textContent='Муха в миске!';$('#cText').textContent=m;$('#chef').classList.add('oops');vo('fly-bad'+((G.flySpoils+1)%2));f.state='off';f.t=0;}}
  else if(f.state==='off'){f.el.querySelector('b').hidden=true;f.y-=.9*dt;f.x+=.6*dt;if(f.y<-.2){stopFly();return;}}
  f.el.style.transform=`translate(${f.x*W-f.el.clientWidth/2}px,${f.y*H-f.el.clientHeight/2}px) rotate(${f.state==='land'?0:Math.sin(f.t*20)*12}deg)`;
 }
@@ -484,7 +491,7 @@ function loop(now){
   updFly(dt);
   const a=G.act;
   if(a&&G.phase==='do'){
-   if(a.type==='hold'){if(a.on){a.fill+=dt*.28;if(Math.random()<dt*20)particle(rnd(.45,.6),rnd(.6,.75),'foam');if(a.fill>=1)spill(a,'Перелилось через край! Вытираем и наливаем снова — медленнее.');}
+   if(a.type==='hold'){if(a.on){a.fill+=dt*.28;if(Math.random()<dt*20)particle(rnd(.45,.6),rnd(.6,.75),'foam');if(a.fill>=1)spill(a,'Перелилось через край! Вытираем и наливаем снова — медленнее.','milk-flood');}
     const f=$('#layer .fill');if(f)f.style.height=Math.min(100,a.fill*100)+'%';}
    if(a.type==='time'){a.p+=dt/a.s.dur;if(a.p>=1)burn(a);
     const n=$('#layer .needle');if(n)n.style.left=a.p*100+'%';
@@ -513,7 +520,7 @@ function finish(){
  $('#sheet').innerHTML='<li><img src="art/fridge.webp" alt=""><div><b>Достать продукты</b><span>2 яйца, молоко, сливочное масло из холодильника. Соль — с полки.</span></div></li>'+
   STEPS.map(s=>`<li><img src="${img(s.img)}" alt=""><div><b>${s.t}</b>${s.adult?' <span style="display:inline;color:#8a5a00">· со взрослым</span>':''}<span>${s.show}</span></div></li>`).join('');
  show('final');
- speak($('#fTitle').textContent+' '+text);
+ vo(G.mode==='learn'?'end-learn':'end-solo');
 }
 
 setVoice();menu();

@@ -19,3 +19,4 @@ head, body = page.split('<div class="wrap">', 1)
     HEAD + head + '</head>\n<body>\n<div class="wrap">' + body + "</body>\n</html>\n", encoding="utf-8"
 )
 shutil.copytree(root / "art", root / "docs" / "art", dirs_exist_ok=True)
+shutil.copytree(root / "voice", root / "docs" / "voice", dirs_exist_ok=True)
