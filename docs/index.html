@@ -1,239 +1,159 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta name="description" content="Бельчата Коко и Орео готовят 20 блюд по шагам, а муха, лягушка и кот пытаются испортить еду.">
+<meta name="description" content="Шеф Вера учит ребёнка готовить по-настоящему: вид от первого лица, холодильник, шаги по порядку.">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Коко и Орео">
+<meta name="apple-mobile-web-app-title" content="Готовлю сам">
 <meta name="theme-color" content="#cfe5d8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Коко и Орео готовят</title>
+<title>Готовлю сам</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Nunito:wght@500;700;800&display=swap">
 <style>
-/* Layout: one-screen kitchen — stage (wall + table + squirrels + pests) on top, a recipe panel below. Single bright look on purpose. */
+/* Layout: a real kitchen seen from your own eyes — one photo stage, the chef's card underneath it. Single warm look on purpose. */
 :root{
-  --wall:#cfe5d8; --tile:#b8d6c4; --wood:#dca865; --wood2:#b9813f; --wood3:#8f5c27;
-  --ink:#27304a; --ink2:#55607d; --paper:#fffaf1; --card:#ffffff; --line:#e7dccb;
-  --tomato:#e0503a; --leaf:#3f9a55; --sun:#f5b929; --sky:#7cc4ea; --milk:#fbfbf8;
-  --ok:#3f9a55; --bad:#e0503a; --warn:#f0a020;
-  --display:"Comfortaa", "Trebuchet MS", system-ui, sans-serif;
-  --body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --bg:#f7f3ec; --card:#ffffff; --ink:#22262e; --ink2:#5d636f; --line:#e6ded1;
+  --accent:#d9472b; --accent2:#a8331c; --ok:#2f8f57; --okbg:#e8f5ed; --warn:#fff2d6; --sky:#3c8dbc;
+  --display:"Unbounded","Trebuchet MS",system-ui,sans-serif;
+  --body:"Nunito","Segoe UI",system-ui,sans-serif;
   color-scheme:light;
 }
 html,body{height:100%}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 *{box-sizing:border-box}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
-.wrap{max-width:980px;margin:0 auto;padding-block:12px 28px}
+h1,h2,h3{font-family:var(--display);font-weight:700;text-wrap:balance;margin:0;letter-spacing:-.01em}
 [hidden]{display:none!important}
+.wrap{max-width:920px;margin:0 auto;padding-block:12px 32px;display:grid;gap:12px}
 
-/* top bar */
-.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.bar h1{font-size:clamp(20px,4vw,28px);flex:1;min-width:0}
-.bar h1 small{display:block;font-family:var(--body);font-weight:600;font-size:13px;color:var(--ink2);letter-spacing:.02em}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bar h1{font-size:clamp(18px,3.6vw,24px);flex:1;min-width:0}
+.bar h1 small{display:block;font-family:var(--body);font-weight:700;font-size:13px;color:var(--ink2);letter-spacing:0}
 .pill{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;display:inline-flex;gap:6px;align-items:center}
 .pill[aria-pressed="false"]{opacity:.55}
 
 /* menu */
-.hero{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:var(--wall);
-  background-image:linear-gradient(var(--tile) 2px,transparent 2px),linear-gradient(90deg,var(--tile) 2px,transparent 2px);
-  background-size:38px 38px;border-radius:22px;padding:18px;margin-bottom:18px}
-.hero .duo{display:flex;gap:4px}
-.hero .duo svg{width:clamp(70px,14vw,120px);height:auto}
-.hero p{margin:6px 0 0;max-width:60ch;line-height:1.45;font-weight:600}
-.lvl{margin:22px 0 10px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.lvl h2{font-size:20px}
-.lvl span{color:var(--ink2);font-weight:600;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.dish{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px 10px;text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center;transition:transform .15s}
-.dish:hover:not(:disabled){transform:translateY(-3px);border-color:var(--wood)}
-.dish .em{font-size:40px;line-height:1.1}
-.dish b{font-size:15px;line-height:1.2}
-.dish .nuts{font-size:15px;letter-spacing:2px}
-.dish:disabled{opacity:.45;cursor:not-allowed}
-.dish .no{font-size:12px;color:var(--ink2);font-weight:700}
-.nut{filter:grayscale(1) opacity(.35)}
-.nut.on{filter:none}
-.foot{margin-top:22px;font-size:14px;color:var(--ink2);line-height:1.5;max-width:70ch}
-.foot label{display:inline-flex;gap:6px;align-items:center;margin-top:8px;font-weight:700}
-
-/* intro card */
-.recipe{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:12px;max-width:640px;margin:0 auto}
-.recipe .big{font-size:64px;line-height:1}
-.recipe ul{margin:0;padding-left:20px;line-height:1.6}
-.cta{background:var(--tomato);color:#fff;border:none;border-radius:16px;padding:14px 22px;font-weight:800;font-size:18px;box-shadow:0 4px 0 #a8382a}
-.cta:active{transform:translateY(3px);box-shadow:0 1px 0 #a8382a}
-.ghost{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 18px;font-weight:800}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.adultnote{background:#fff3d6;border-radius:12px;padding:10px 12px;font-weight:600;line-height:1.4}
+.intro{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:22px;padding:16px}
+.intro img{width:120px;height:120px;border-radius:50%;object-fit:cover}
+.intro p{margin:6px 0 0;line-height:1.5;font-weight:600;max-width:62ch}
+.feature{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);background:var(--card);border:2px solid var(--line);border-radius:22px;overflow:hidden}
+.feature img{width:100%;height:100%;object-fit:cover;display:block;min-height:200px}
+.feature .fbody{padding:18px;display:grid;gap:10px;align-content:center}
+.feature .fbody p{margin:0;color:var(--ink2);font-weight:600;line-height:1.45}
+.modes{display:grid;gap:8px}
+.mode{display:flex;gap:12px;align-items:center;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:12px 14px;font-weight:800}
+.mode small{display:block;font-weight:600;color:var(--ink2);font-size:13px}
+.mode .n{font-family:var(--display);font-size:20px;color:var(--accent)}
+.mode:disabled{opacity:.5;cursor:not-allowed}
+.mode:hover:not(:disabled){border-color:var(--accent)}
+.soon h2{font-size:17px;margin:8px 0}
+.soonlist{display:flex;flex-wrap:wrap;gap:6px}
+.soonlist span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:14px;font-weight:700;color:var(--ink2)}
+.note{font-size:14px;color:var(--ink2);line-height:1.5;max-width:70ch}
 
 /* stage */
-#stage{position:relative;height:clamp(270px,50vh,470px);border-radius:22px;overflow:hidden;background:var(--wall);
-  background-image:linear-gradient(var(--tile) 2px,transparent 2px),linear-gradient(90deg,var(--tile) 2px,transparent 2px);
-  background-size:42px 42px;user-select:none;-webkit-user-select:none;touch-action:none}
-.window{position:absolute;left:50%;top:6%;width:26%;height:30%;transform:translateX(-50%);background:linear-gradient(#bfe6fb,#e9f7ff);border:8px solid #fff;border-radius:10px;box-shadow:inset 0 0 0 3px #e2eef4}
-.window::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:6px;background:#fff;transform:translateX(-50%)}
-.shelf{position:absolute;left:6%;top:12%;width:22%;height:8px;background:var(--wood2);border-radius:4px}
-.shelf span{position:absolute;bottom:8px;font-size:22px}
-.table{position:absolute;left:0;right:0;bottom:0;height:38%;background:linear-gradient(var(--wood) 0 18%,var(--wood2) 18% 22%,var(--wood) 22%);z-index:3}
-.table::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 60px,rgba(0,0,0,.05) 60px 62px)}
-.sq{position:absolute;bottom:28%;width:clamp(96px,19%,170px);z-index:2;transition:transform .2s}
-.sq svg{width:100%;height:auto;display:block}
-.sq.do{animation:bob .5s ease-in-out infinite alternate}
-#koko{left:1%}
-#oreo{right:1%}
-.sq .name{position:absolute;left:50%;transform:translateX(-50%);bottom:-26px;font-family:var(--display);font-weight:700;font-size:13px;background:#fff;border-radius:999px;padding:1px 9px;z-index:5;white-space:nowrap}
-.bubble{position:absolute;bottom:92%;left:50%;transform:translateX(-50%) scale(.6);opacity:0;background:#fff;border-radius:16px;padding:6px 10px;font-weight:800;font-size:13px;line-height:1.25;width:max-content;max-width:160px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.08);transition:.18s;pointer-events:none;z-index:9}
-.bubble.on{opacity:1;transform:translateX(-50%) scale(1)}
-#koko .bubble{left:60%}
-#oreo .bubble{left:40%}
-@keyframes bob{to{transform:translateY(-6px) rotate(-2deg)}}
+#stage{position:relative;width:min(100%,calc(64vh * 1400 / 1045));aspect-ratio:1400/1045;margin:0 auto;border-radius:20px;overflow:hidden;background:#ddd;user-select:none;-webkit-user-select:none;touch-action:none;box-shadow:0 10px 30px rgba(40,30,20,.12)}
+#stage>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:filter .2s}
+#stage.dim>img.bg{filter:brightness(.7)}
+.hot{position:absolute;border:4px solid #fff;border-radius:18px;background:rgba(255,255,255,.08);box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 1.4s infinite;cursor:pointer;padding:0}
+@keyframes pulse{70%{box-shadow:0 0 0 18px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.hot span{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);background:#fff;border-radius:999px;padding:4px 12px;font-weight:800;font-size:14px;white-space:nowrap}
+.item{position:absolute;transform:translate(-50%,-100%);cursor:pointer;background:none;border:none;padding:0;transition:transform .25s, opacity .25s, filter .2s;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
+.item img{display:block;width:100%;height:auto;pointer-events:none}
+.item:hover{transform:translate(-50%,-102%) scale(1.04)}
+.item.no{animation:nope .35s}
+.item.taken{opacity:0;transform:translate(-50%,40%) scale(.3);pointer-events:none}
+@keyframes nope{25%{transform:translate(-54%,-100%)}75%{transform:translate(-46%,-100%)}}
+.onboard{position:absolute;transform:translate(-50%,-100%);pointer-events:none;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25));animation:drop .4s ease-out}
+.onboard img{display:block;width:100%;height:auto}
+@keyframes drop{from{transform:translate(-50%,-140%);opacity:0}}
+.fx{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;pointer-events:none;border-radius:50%;animation:pf .9s ease-out forwards}
+@keyframes pf{from{opacity:.95;transform:translate(-50%,-50%) scale(.6)}to{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.3)}}
+.ring{position:absolute;border:4px solid #fff;border-radius:50%;width:70px;height:70px;transform:translate(-50%,-50%);animation:ring .5s ease-out forwards;pointer-events:none}
+@keyframes ring{from{opacity:1;transform:translate(-50%,-50%) scale(.4)}to{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
+.gauge{position:absolute;right:4%;top:10%;bottom:10%;width:46px;border-radius:24px;background:rgba(25,35,50,.45);border:3px solid #fff;overflow:hidden;backdrop-filter:blur(4px)}
+.gauge .fill{position:absolute;left:0;right:0;bottom:0;height:0;background:#fff;box-shadow:inset 0 3px 0 #dfe8ef}
+.gauge .zone{position:absolute;left:0;right:0;background:rgba(47,143,87,.35);border-top:3px solid var(--ok);border-bottom:3px solid var(--ok)}
+.tgauge{position:absolute;left:6%;right:6%;bottom:5%;height:26px;border-radius:999px;background:rgba(255,255,255,.75);border:3px solid #fff;overflow:hidden}
+.tgauge .zr{position:absolute;top:0;bottom:0;background:rgba(47,143,87,.55)}
+.tgauge .zb{position:absolute;top:0;bottom:0;right:0;background:rgba(217,71,43,.5)}
+.tgauge .needle{position:absolute;top:-3px;bottom:-3px;width:6px;margin-left:-3px;background:var(--ink);border-radius:3px}
+.prog{position:absolute;left:6%;right:6%;bottom:5%;height:14px;border-radius:999px;background:rgba(255,255,255,.7);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .1s}
+.taps{position:absolute;left:50%;bottom:5%;transform:translateX(-50%);display:flex;gap:8px}
+.taps i{width:24px;height:24px;border-radius:50%;border:3px solid #fff;background:rgba(0,0,0,.25)}
+.taps i.on{background:var(--ok)}
+.fly{position:absolute;left:0;top:0;width:clamp(40px,7%,60px);cursor:pointer;z-index:5;touch-action:none}
+.fly img{width:100%;display:block;pointer-events:none}
+.fly b{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);background:#fff;border-radius:10px;padding:1px 7px;font-size:12px;white-space:nowrap}
+.flash{position:absolute;left:50%;top:12px;transform:translate(-50%,-150%);transition:transform .25s;background:#fff;border-radius:14px;padding:8px 14px;font-weight:800;z-index:6;max-width:90%;text-align:center}
+.flash.on{transform:translate(-50%,0)}
+.tray{position:absolute;left:0;right:0;bottom:0;display:flex;gap:8px;justify-content:center;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,.45))}
+.tray .slot{width:58px;height:58px;border-radius:14px;border:3px dashed rgba(255,255,255,.9);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;background:rgba(255,255,255,.12)}
+.tray .slot img{max-width:46px;max-height:46px}
+.tray .slot.full{border-style:solid;background:rgba(255,255,255,.85)}
 
-#jug{position:absolute;right:23%;bottom:31%;width:clamp(44px,7%,64px);z-index:4;transition:filter .3s}
-#jug svg{width:100%;height:auto;display:block}
-#jug.bad{filter:hue-rotate(70deg) saturate(1.6)}
-#jug.splash{animation:shake .4s 3}
-
-#work{position:absolute;left:50%;bottom:9%;width:min(46%,420px);height:72%;transform:translateX(-50%);z-index:5;touch-action:none}
-.tool{position:absolute;left:50%;bottom:0;transform:translateX(-50%)}
-.t-board{width:92%;height:34%;background:linear-gradient(#e9bf86,#d6a462);border-radius:18px;box-shadow:0 6px 0 #b07b3a}
-.t-board::after{content:"";position:absolute;right:6%;top:40%;width:18px;height:10px;border-radius:9px;background:#b07b3a}
-.t-bowl,.t-plate{width:78%;height:40%;background:linear-gradient(#e9f4fb,#bcdbee);border-radius:12px 12px 50% 50%/12px 12px 90% 90%;box-shadow:inset 0 10px 0 #a9cfe6}
-.t-plate{height:16%;border-radius:50%;background:#fff;box-shadow:0 5px 0 #dfe6ea}
-.t-pan{width:80%;height:22%;background:radial-gradient(#4b4f5c,#2c2f38);border-radius:50%;box-shadow:0 6px 0 #1e2027}
-.t-pan::after{content:"";position:absolute;left:96%;top:40%;width:42%;height:18%;background:#2c2f38;border-radius:8px}
-.t-pot{width:62%;height:48%;background:linear-gradient(90deg,#aeb6c2,#e3e8ee 40%,#9aa3b0);border-radius:6px 6px 22px 22px;box-shadow:inset 0 8px 0 #7d8694}
-.t-pot::before,.t-pot::after{content:"";position:absolute;top:12%;width:14%;height:12%;background:#7d8694;border-radius:6px}
-.t-pot::before{left:-12%}.t-pot::after{right:-12%}
-.t-sink{width:84%;height:36%;background:linear-gradient(#d7e4ee,#aac2d4);border-radius:10px 10px 30px 30px}
-.t-sink::before{content:"";position:absolute;left:48%;bottom:100%;width:7%;height:150%;background:linear-gradient(90deg,rgba(124,196,234,.4),rgba(124,196,234,.9),rgba(124,196,234,.4));animation:flow .4s linear infinite;border-radius:6px}
-.t-sink::after{content:"";position:absolute;left:44%;bottom:250%;width:24%;height:12%;background:#9aa3b0;border-radius:8px 8px 0 0}
-@keyframes flow{50%{opacity:.6}}
-.t-jar,.t-blender{width:40%;height:70%;border:5px solid rgba(255,255,255,.95);border-top:none;background:rgba(255,255,255,.35);border-radius:0 0 18px 18px}
-.t-blender{border-radius:4px 4px 10px 10px;height:62%;bottom:14%}
-.t-blender::after{content:"";position:absolute;left:-14%;right:-14%;top:100%;height:25%;background:#3c4252;border-radius:6px 6px 10px 10px}
-.t-tray{width:92%;height:14%;background:linear-gradient(#5a606e,#3d424f);border-radius:6px;box-shadow:0 5px 0 #2a2e38}
-.t-oven{width:74%;height:84%;background:#e9ecef;border-radius:14px;box-shadow:inset 0 0 0 6px #cfd5db}
-.t-oven::before{content:"";position:absolute;left:12%;right:12%;top:22%;bottom:12%;background:#2d313b;border-radius:10px;box-shadow:inset 0 0 0 4px #9aa3b0}
-.t-oven::after{content:"";position:absolute;left:14%;right:14%;top:7%;height:7%;background:radial-gradient(circle at 15% 50%,#555 0 30%,transparent 32%),radial-gradient(circle at 40% 50%,#555 0 30%,transparent 32%);}
-.t-oven.hot::before{background:radial-gradient(#ffb347,#d9541e 70%);}
-.t-grater{width:22%;height:66%;left:80%;background:repeating-linear-gradient(#c6ccd4 0 6px,#8d96a3 6px 8px);border-radius:8px 8px 4px 4px}
-.stack{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;width:70%;font-size:clamp(18px,3.4vw,28px);gap:0 2px;pointer-events:none}
-.item{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);font-size:clamp(58px,11vw,104px);line-height:1;transition:filter .2s, transform .15s;pointer-events:none}
-.item.germs::after{content:"• • •\A • •";white-space:pre;position:absolute;inset:20% 10%;color:#7cbf3a;font-size:.25em;text-align:center;font-weight:900}
-.item.wiggle{animation:shake .25s}
-.fx{position:absolute;inset:0;pointer-events:none;overflow:visible}
-.p{position:absolute;pointer-events:none;animation:pfly .9s ease-out forwards}
-.p.dot{width:10px;height:10px;border-radius:50%}
-.p.strip{width:14px;height:5px;border-radius:3px}
-.p.emo{font-size:22px}
-@keyframes pfly{from{opacity:1;transform:translate(0,0) rotate(0)}to{opacity:0;transform:translate(var(--dx,0),var(--dy,40px)) rotate(var(--r,90deg))}}
-@keyframes shake{25%{transform:translate(-50%,-50%) rotate(-6deg)}75%{transform:translate(-50%,-50%) rotate(6deg)}}
-#jug.splash{animation:jshake .4s 3}
-@keyframes jshake{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
-
-/* cut */
-.cutwrap{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);width:1.25em;height:1.25em;font-size:clamp(70px,13vw,124px);pointer-events:none}
-.seg{position:absolute;inset:0;text-align:center;line-height:1.25em;transition:transform .25s}
-.cline{position:absolute;top:-12%;bottom:-12%;width:48px;transform:translateX(-50%);background:none;border:none;padding:0;pointer-events:auto;font-size:16px}
-.cline::after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:3px dashed var(--tomato);transform:translateX(-50%);animation:blink 1s infinite}
-.cline.cut::after{border-left:3px solid transparent;animation:none}
-.cline.cut{pointer-events:none}
-@keyframes blink{50%{opacity:.35}}
-.knife{position:absolute;top:-40%;font-size:34px;transform:translateX(-30%) rotate(-20deg);animation:chop .35s ease-in forwards;pointer-events:none}
-@keyframes chop{to{top:35%;opacity:0}}
-
-/* hold vessel */
-.vessel{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:44%;height:74%;border:5px solid #fff;border-top:none;border-radius:0 0 22px 22px;background:rgba(255,255,255,.35);overflow:hidden}
-.vessel .fill{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--liq,#fff)}
-.vessel .zone{position:absolute;left:0;right:0;border-top:3px dashed var(--leaf);border-bottom:3px dashed var(--leaf);background:rgba(63,154,85,.16)}
-.pourer{position:absolute;left:58%;top:0;font-size:clamp(44px,8vw,70px);transform-origin:20% 80%;transition:transform .2s;pointer-events:none}
-.pourer.on{transform:rotate(-55deg)}
-.stream{position:absolute;left:49%;top:14%;width:8px;bottom:6%;background:var(--liq,#fff);border-radius:4px;opacity:0;transition:opacity .15s}
-.stream.on{opacity:.95}
-
-/* pests */
-#pests{position:absolute;inset:0;z-index:8;pointer-events:none}
-.pest{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;touch-action:none}
-.pest svg{display:block;width:100%;height:auto}
-.pest.fly{width:52px}
-.pest.frog{width:74px}
-.pest.cat{width:clamp(110px,18%,150px)}
-.pest .hint{position:absolute;left:50%;bottom:100%;transform:translateX(-50%);background:#fff;border-radius:10px;padding:2px 7px;font-weight:800;font-size:12px;white-space:nowrap}
-.wing{transform-origin:50% 100%;animation:flap .06s linear infinite alternate}
-@keyframes flap{to{transform:scaleY(.4)}}
-.paws{position:absolute;z-index:4;font-size:22px;opacity:.6;transform:rotate(-15deg);pointer-events:none;transition:opacity 1s}
-#toast{position:absolute;left:50%;top:10px;transform:translate(-50%,-140%);transition:transform .25s;z-index:10;background:#fff;border-radius:16px;padding:10px 14px;font-weight:800;width:min(92%,520px);text-align:center;line-height:1.35;box-shadow:0 6px 0 rgba(0,0,0,.08);border:3px solid var(--bad)}
-#toast.on{transform:translate(-50%,0)}
-#toast.good{border-color:var(--ok)}
-
-/* panel */
-#panel{margin-top:12px;display:grid;gap:10px}
+/* chef card */
+.chef{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;align-items:start}
+.chef.oops{border-color:var(--accent);background:#fff6f3}
+.chef.yay{border-color:var(--ok);background:var(--okbg)}
+.chef img.face{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--bg)}
+.chef .who{font-family:var(--display);font-size:13px;color:var(--accent);letter-spacing:.02em;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chef .tag{background:var(--warn);color:#8a5a00;border-radius:999px;padding:2px 10px;font-family:var(--body);font-weight:800;font-size:12px}
+.chef h2{font-size:clamp(17px,3vw,21px);margin:4px 0 6px}
+.chef p{margin:0;line-height:1.5;font-weight:600;max-width:68ch}
+.chef .why{margin-top:8px;font-size:14px;color:var(--ink2)}
+.actions{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}
+.cta{background:var(--accent);color:#fff;border:none;border-radius:16px;padding:13px 20px;font-weight:800;font-size:17px;box-shadow:0 4px 0 var(--accent2)}
+.cta:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent2)}
+.ghost{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:11px 16px;font-weight:800}
+.hold{background:var(--sky);color:#fff;border:none;border-radius:16px;padding:16px 22px;font-weight:800;font-size:18px;box-shadow:0 5px 0 #2a6488;touch-action:none;user-select:none;-webkit-user-select:none}
+.hold.on{transform:translateY(4px);box-shadow:0 1px 0 #2a6488}
 .stepline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:800;color:var(--ink2);font-size:14px}
-.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dots{display:flex;gap:4px}
 .dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
-.dots i.d{background:var(--leaf)}
-.dots i.c{background:var(--sun);box-shadow:0 0 0 3px #fde7a8}
-.tag{background:#fff3d6;color:#8a5a00;border-radius:999px;padding:3px 10px;font-size:13px}
-#q{font-size:clamp(18px,3.4vw,24px)}
-#choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.choice{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:12px;display:flex;gap:10px;align-items:center;text-align:left;font-weight:800;font-size:16px;line-height:1.25;min-height:70px;box-shadow:0 4px 0 var(--line)}
-.choice .ce{font-size:34px;flex:none}
-.choice:hover:not(:disabled){border-color:var(--wood)}
-.choice.wrong{border-color:var(--bad);opacity:.5;animation:cshake .3s}
-.choice.right{border-color:var(--ok);background:#eaf7ee}
-@keyframes cshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-#ctrl{display:grid;gap:10px}
-.howto{font-weight:800;font-size:17px}
-.meter{height:16px;background:#efe6d8;border-radius:999px;overflow:hidden}
-.meter i{display:block;height:100%;width:0;background:var(--leaf);border-radius:999px;transition:width .1s}
-.taps{display:flex;gap:6px;flex-wrap:wrap}
-.taps i{width:22px;height:22px;border-radius:50%;border:3px solid var(--leaf)}
-.taps i.on{background:var(--leaf)}
-.bigbtn{background:var(--sky);color:#0d2a3d;border:none;border-radius:18px;padding:16px;font-size:19px;font-weight:800;box-shadow:0 5px 0 #4b95bd;touch-action:none;-webkit-user-select:none;user-select:none}
-.bigbtn.on{transform:translateY(4px);box-shadow:0 1px 0 #4b95bd}
-.bigbtn.go{background:var(--sun);box-shadow:0 5px 0 #c98c0d;color:#3a2600}
-.tbar{position:relative;height:30px;border-radius:999px;background:#e8dfd1;overflow:hidden}
-.tbar .zr{position:absolute;top:0;bottom:0;background:#9bd3a8}
-.tbar .zb{position:absolute;top:0;bottom:0;right:0;background:#f2a397}
-.tbar .needle{position:absolute;top:-2px;bottom:-2px;width:6px;margin-left:-3px;background:var(--ink);border-radius:3px}
-.tlab{display:flex;justify-content:space-between;font-size:12px;font-weight:800;color:var(--ink2)}
-.tip{background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
-.tip .hat{width:38px}
-.tip b{display:block;font-family:var(--display);font-size:14px;letter-spacing:.04em;color:var(--tomato);margin-bottom:2px;text-transform:uppercase}
-.tip p{margin:0;line-height:1.45;font-weight:600;max-width:70ch}
-.tip.oops{border-color:var(--bad);background:#fff3f0}
-.tip.oops b{color:var(--bad)}
-.say{background:none;border:2px solid var(--line);border-radius:12px;padding:6px 8px;font-size:18px}
+.dots i.d{background:var(--ok)}
+.dots i.c{background:var(--accent)}
+.choices{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.choice{background:var(--card);border:3px solid var(--line);border-radius:16px;padding:0;overflow:hidden;text-align:left;font-weight:800;display:grid}
+.choice img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.choice .ph{aspect-ratio:4/3;display:grid;place-items:center;font-size:44px;background:var(--bg)}
+.choice span{padding:8px 10px;line-height:1.25}
+.choice.wrong{border-color:var(--accent);opacity:.45}
+.choice.right{border-color:var(--ok)}
 
-/* done */
-.done{display:grid;gap:14px;max-width:720px;margin:0 auto}
-.done .head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.done .em{font-size:72px}
-.bignuts{font-size:40px;letter-spacing:6px}
-.sheet{background:#fff;border:2px dashed var(--wood);border-radius:18px;padding:16px 18px}
-.sheet h3{font-size:18px;margin-bottom:8px}
-.sheet ol{margin:0;padding-left:24px;display:grid;gap:8px}
-.sheet li{line-height:1.4}
-.sheet li b{font-weight:800}
-.sheet li span{display:block;color:var(--ink2);font-size:14px}
-.stats{display:flex;gap:8px;flex-wrap:wrap}
+/* finale */
+.finale{display:grid;gap:14px}
+.finale .top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:22px;overflow:hidden}
+.finale .top img{width:100%;display:block}
+.finale .top>div{padding:16px;display:grid;gap:8px}
+.stars{font-size:34px;letter-spacing:4px}
+.star{filter:grayscale(1) opacity(.3)}.star.on{filter:none}
+.card{background:var(--card);border:2px dashed #cbb99c;border-radius:20px;padding:16px 18px}
+.card h3{font-size:17px;margin-bottom:10px}
+.card ol{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:s}
+.card li{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;counter-increment:s}
+.card li img{width:72px;height:54px;border-radius:10px;object-fit:cover}
+.card li b::before{content:counter(s) ". "}
+.card li span{display:block;color:var(--ink2);font-size:14px;line-height:1.4;font-weight:600}
 
-@media (max-width:620px){
-  #choices{grid-template-columns:1fr}
-  .choice{min-height:56px;padding:8px 12px}
-  .choice .ce{font-size:28px}
-  .hero{grid-template-columns:1fr}
-  #stage{height:clamp(250px,44vh,380px)}
-  .bubble{font-size:12px;max-width:120px}
+@media (max-width:640px){
+  .intro{grid-template-columns:72px 1fr}.intro img{width:72px;height:72px}
+  .feature,.finale .top{grid-template-columns:1fr}
+  .choices{grid-template-columns:1fr}
+  .choice{grid-template-columns:96px 1fr;align-items:center}
+  .choice img,.choice .ph{aspect-ratio:4/3;height:72px;width:96px;font-size:30px}
+  .chef{grid-template-columns:1fr}.chef img.face{width:48px;height:48px}
+  .chef .head{display:flex;gap:10px;align-items:center}
+  .tray .slot{width:48px;height:48px}
 }
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important;transition:none!important}}
 </style>
 
 </head>
@@ -241,786 +161,371 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
 <div class="wrap">
   <div class="bar">
     <button class="pill" id="back" hidden>← Меню</button>
-    <h1 id="title">Коко и Орео готовят<small>20 блюд, которые можно приготовить самому</small></h1>
-    <span class="pill" id="score" hidden></span>
+    <h1 id="title">Готовлю сам<small>Шеф Вера учит готовить по-настоящему</small></h1>
     <button class="pill" id="voiceBtn" aria-pressed="true">🔊 Голос</button>
   </div>
 
-  <!-- MENU -->
   <section id="menu">
-    <div class="hero">
-      <div class="duo" id="heroDuo"></div>
-      <div>
-        <h2>Бельчата готовят — а муха, лягушка и кот мешают</h2>
-        <p>Выбирай, что делать дальше, и выполняй шаг: мой, чисти, режь, мешай, жарь. Шеф подскажет, как это делают на настоящей кухне. Прогоняй муху, лягушку и кота — нажми на них!</p>
+    <div class="wrap" style="padding:0">
+      <div class="intro">
+        <img src="art/chef.webp" alt="Шеф Вера">
+        <div>
+          <h2>Привет! Я шеф Вера</h2>
+          <p>Ты стоишь на кухне и видишь свои руки. Сначала я покажу и объясню каждый шаг, а ты повторишь. Потом приготовишь сам — без подсказок.</p>
+        </div>
       </div>
-    </div>
-    <div id="levels"></div>
-    <div class="foot">
-      За каждое блюдо — до трёх орешков: 🌰 приготовил, 🌰 почти без ошибок в порядке, 🌰 никто не испортил еду.<br>
-      Игра учит порядку и приёмам. На настоящей кухне нож, плиту, духовку и блендер берём только вместе со взрослым.
-      <br><label><input type="checkbox" id="unlockAll"> Открыть все блюда (для взрослых)</label>
+      <div class="feature">
+        <img src="art/done.webp" alt="Омлет на тарелке">
+        <div class="fbody">
+          <h2>Омлет</h2>
+          <p>Яйца, молоко, соль и масло. 8 шагов, плиту включает взрослый.</p>
+          <div class="modes">
+            <button class="mode" id="learnBtn"><span class="n">1</span><span>Учусь с шефом<small>Шеф показывает и объясняет каждый шаг</small></span></button>
+            <button class="mode" id="soloBtn"><span class="n">2</span><span>Готовлю сам<small id="soloNote">Откроется после урока с шефом</small></span></button>
+          </div>
+          <div class="stars" id="menuStars"></div>
+        </div>
+      </div>
+      <div class="soon">
+        <h2>Скоро на кухне</h2>
+        <div class="soonlist" id="soon"></div>
+      </div>
+      <p class="note">Игра учит порядку и приёмам. На настоящей кухне нож, плиту и духовку берём только вместе со взрослым.</p>
     </div>
   </section>
 
-  <!-- INTRO -->
-  <section id="intro" hidden>
-    <div class="recipe">
-      <div class="row"><span class="big" id="inIcon"></span><div><h2 id="inName"></h2><div class="stepline" id="inLvl"></div></div></div>
-      <div><b>Что понадобится:</b><ul id="inIng"></ul></div>
-      <div class="adultnote" id="inAdult"></div>
-      <div class="row"><button class="cta" id="startBtn">Начинаем готовить!</button></div>
-    </div>
-  </section>
-
-  <!-- GAME -->
   <section id="game" hidden>
-    <div id="stage">
-      <div class="window"></div>
-      <div class="shelf"><span style="left:4%">🫙</span><span style="left:36%">🧂</span><span style="left:66%">🍯</span></div>
-      <div class="sq" id="koko"><div class="bubble"></div></div>
-      <div class="sq" id="oreo"><div class="bubble"></div></div>
-      <div class="table"></div>
-      <div id="jug"></div>
-      <div id="work"></div>
-      <div id="pests"></div>
-      <div id="toast"></div>
-    </div>
-    <div id="panel">
-      <div class="stepline"><span id="stepNo"></span><span class="dots" id="dots"></span><span class="tag" id="adultTag" hidden>со взрослым</span></div>
-      <h2 id="q"></h2>
-      <div id="choices"></div>
-      <div id="ctrl"></div>
-      <div class="tip" id="tipbox">
-        <svg class="hat" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 22c-5-1-6-9 0-10 1-6 9-8 12-3 3-5 11-3 12 3 6 1 5 9 0 10v8H8z" fill="#fff" stroke="#27304a" stroke-width="2"/><rect x="8" y="28" width="24" height="6" rx="2" fill="#e0503a"/></svg>
-        <div><b id="tipHead">Совет шефа</b><p id="tip"></p></div>
-        <button class="say" id="sayBtn" title="Прочитать вслух">🔊</button>
+    <div class="wrap" style="padding:0">
+      <div class="stepline"><span id="stepNo"></span><span class="dots" id="dots"></span></div>
+      <div id="stage"><img class="bg" id="bg" alt=""><div id="layer"></div><div class="fx" id="fx"></div><div class="flash" id="flash"></div></div>
+      <div class="chef" id="chef">
+        <img class="face" src="art/chef.webp" alt="">
+        <div>
+          <div class="who">ШЕФ ВЕРА <span class="tag" id="adult" hidden>со взрослым</span></div>
+          <h2 id="cTitle"></h2>
+          <p id="cText"></p>
+          <p class="why" id="cWhy" hidden></p>
+        </div>
+        <div class="choices" id="choices" hidden></div>
+        <div class="actions" id="actions"></div>
       </div>
     </div>
   </section>
 
-  <!-- DONE -->
-  <section id="done" hidden>
-    <div class="done">
-      <div class="head"><span class="em" id="dnIcon"></span><div><h2 id="dnName"></h2><div class="bignuts" id="dnNuts"></div></div></div>
-      <div class="stats" id="dnStats"></div>
-      <div class="sheet"><h3>Шпаргалка: как приготовить самому</h3><ol id="dnSheet"></ol></div>
-      <div class="row"><button class="cta" id="nextBtn">Следующее блюдо</button><button class="ghost" id="againBtn">Ещё раз</button><button class="ghost" id="menuBtn">В меню</button></div>
+  <section id="final" hidden>
+    <div class="finale">
+      <div class="top"><img src="art/done.webp" alt="Готовый омлет"><div><h2 id="fTitle"></h2><div class="stars" id="fStars"></div><p id="fText" style="margin:0;font-weight:600;line-height:1.5"></p><div class="actions" id="fActions"></div></div></div>
+      <div class="card"><h3>Шпаргалка: омлет на двоих</h3><ol id="sheet"></ol></div>
     </div>
   </section>
 </div>
 
 <script>
-/* ================= ШАГИ ================= */
-function st(k,v,o,i,x){return Object.assign({k,v,o,i},x||{});}
-const HANDS=()=>st('rub','Помыть','руки','🧼',{fx:'bubble',tool:'sink',n:1,
-  tip:'Мыло и тёплая вода, 20 секунд — это два раза спеть «С днём рождения». Потри между пальцами и под ногтями.',
-  why:'Готовка всегда начинается с чистых рук: руки трогали дверные ручки, телефон и игрушки.'});
-const HW=(x)=>st('rub','Помыть','руки ещё раз','🧼',Object.assign({fx:'bubble',tool:'sink',n:.8,
-  tip:'Трогали сырые яйца или сырое мясо — сразу моем руки с мылом. Только потом берём другие продукты.',
-  why:'На скорлупе сырых яиц и на сыром мясе бывают микробы. Чистые руки не перенесут их в готовую еду.'},x));
-const W=(o,i,x)=>st('rub','Помыть',o,i,Object.assign({fx:'water',tool:'sink',n:1,
-  tip:'Подставь под прохладную воду и потри ладонями со всех сторон.',
-  why:'Сначала моем, потом режем. Иначе нож протащит грязь с кожуры прямо внутрь.'},x));
-const P=(o,i,x)=>st('rub','Почистить',o,i,Object.assign({fx:'peel',tool:'board',n:1.1,
-  tip:'Овощечистку веди от себя, пальцы держи позади лезвия.',
-  why:'Сначала чистим, потом режем: очищать маленькие кусочки долго и опасно для пальцев.'},x));
-const C=(o,i,n,x)=>st('cut','Нарезать',o,i,Object.assign({n,tool:'board',adult:true,
-  tip:'Пальцы — «кошачья лапка»: кончики подогнуты, нож идёт вдоль костяшек. Клади продукт плоской стороной вниз, чтобы не катался.',
-  why:'Режем на доске и только когда продукт уже чистый.'},x));
-const GR=(o,i,x)=>st('rub','Натереть',o,i,Object.assign({fx:'shred',tool:'grater',n:1.2,
-  tip:'Держи за верхний кончик. Последний маленький кусочек не дотирай — пальцы дороже.',
-  why:'На тёрку идёт уже вымытый и очищенный продукт.'},x));
-const T=(v,o,i,n,x)=>st('tap',v,o,i,Object.assign({n,tool:'bowl',fx:'place'},x));
-const R=(v,o,i,x)=>st('rub',v,o,i,Object.assign({fx:'stir',tool:'bowl',n:1},x));
-const L=(v,o,i,c,x)=>st('hold',v,o,i,Object.assign({c,tool:'bowl',lo:.55,hi:.8},x));
-const K=(v,o,i,x)=>st('time',v,o,i,Object.assign({tool:'pan',adult:true,dur:6,b:'Готово!'},x));
-const E=(n,x)=>T('Разбить',n>1?'яйца в миску':'яйцо в миску','🥚',n,Object.assign({fx:'crack',
-  tip:'Стукни яйцо о плоский стол, а не о край миски — меньше скорлупы попадёт внутрь. Упала скорлупка? Вылови её половинкой скорлупы.',
-  why:'Яйца разбиваем в отдельную миску: если попадётся несвежее, оно не испортит всё блюдо.'},x));
-const OVEN=(t,x)=>K('Включить',`духовку на ${t}°`,'🔥',Object.assign({tool:'oven',dur:4,b:'Нагрелась!',soft:true,
-  tip:'Духовку включаем заранее: ей нужно 10–15 минут, чтобы нагреться. В холодной духовке тесто не поднимется.',
-  why:'Духовка греется долго, поэтому её включают в самом начале — сразу после мытья рук.'},x));
-const MILK='#fbfbf8', WATER='#8fcbed', OIL='#e8c84a';
-const BOIL=(x)=>K('Вскипятить','воду','♨️',Object.assign({tool:'pot',dur:5,b:'Кипит!',soft:true,tip:'Накрой кастрюлю крышкой — вода закипит быстрее. Кипит, когда большие пузыри бегут по всей поверхности.'},x));
-const POTWATER=(x)=>L('Налить','воду в кастрюлю','💧',WATER,Object.assign({tool:'pot'},x));
-
-/* ================= 20 БЛЮД ================= */
-const LVLS={1:['Без плиты','режем, мешаем, собираем'],2:['Первая плита','плиту включает взрослый'],3:['Настоящий обед','много шагов и всё по порядку'],4:['Духовка и выпечка','точность, как у кондитера']};
-const DISHES=[
-{id:'buter',name:'Бутерброд с сыром и огурцом',icon:'🥪',lvl:1,ing:['хлеб','сливочное масло','сыр','огурец'],steps:[
- HANDS(), W('огурец','🥒'),
- C('огурец кружочками','🥒',4,{tip:'«Кошачья лапка»: кончики пальцев подогнуты, нож скользит вдоль костяшек. Кружочки тонкие, как монетка.'}),
- R('Намазать','хлеб маслом','🍞',{fx:'spread',tool:'board',tip:'Достань масло из холодильника за 10 минут — мягкое мажется и не рвёт хлеб. Мажь ножом плашмя, от центра к краям.',why:'Масло кладём первым: оно как клей — сыр и огурцы не съезжают.'}),
- T('Положить','сыр','🧀',2,{tool:'board',tip:'Сыр ложится прямо на масло и держится.',why:'Сначала сыр, потом огурцы: мокрый огурец прямо на хлебе размочит его.'}),
- T('Разложить','огурцы','🥒',4,{tool:'board',tip:'Огурцы кладём на сыр. Хлеб останется сухим и хрустящим.'})]},
-{id:'fruit',name:'Фруктовый салат с йогуртом',icon:'🍓',lvl:1,ing:['яблоко','клубника','банан','йогурт'],steps:[
- HANDS(), W('яблоко','🍎',{tip:'Шефы сначала моют всё, что пойдёт в блюдо, и только потом берут нож.'}),
- W('клубнику','🍓',{tip:'Ягоды моют бережно, в миске с водой, и только перед едой: мокрые ягоды быстро портятся.'}),
- C('яблоко дольками','🍎',3,{tip:'Разрежь яблоко на четвертинки и вырежи серединку с косточками. Дольки клади плоской стороной на доску.'}),
- C('клубнику','🍓',2,{tip:'Сначала отрежь зелёный хвостик, потом — пополам. Ягода мягкая: нож острый, движение лёгкое.'}),
- P('банан','🍌',{tip:'Банан чистим руками: надломи хвостик и потяни кожуру полосками вниз.',why:'Банан чистим и режем последним: на воздухе он быстро темнеет.'}),
- C('банан','🍌',4,{adult:false,tip:'Банан мягкий — его можно резать даже столовым ножом. Кружочки одинаковой толщины.'}),
- L('Полить','йогуртом','🥛','#f6f0ea',{tip:'Лей понемногу и смотри на полоску: йогурт должен укрыть фрукты, а не утопить их.'}),
- R('Перемешать','салат','🥄',{tip:'Мешай снизу вверх, бережно, как будто переворачиваешь одеяло. Так клубника не раздавится.'})]},
-{id:'oats',name:'Ленивая овсянка в банке',icon:'🫙',lvl:1,ing:['овсяные хлопья','молоко','мёд','ягоды'],steps:[
- HANDS(),
- T('Насыпать','хлопья в банку','🌾',3,{tool:'jar',tip:'Три столовые ложки хлопьев. Набирай с горкой и стряхивай лишнее о край пачки.'}),
- L('Налить','молоко','🥛',MILK,{tool:'jar',tip:'Молока столько же, сколько хлопьев, или чуть больше. За ночь хлопья его впитают и набухнут.',why:'Сначала сухое, потом жидкое: так видно, сколько молока нужно.'}),
- T('Добавить','мёд','🍯',1,{tool:'jar',tip:'Одна чайная ложка. Мёд тянется — держи ложку над банкой, чтобы не капать на стол.'}),
- R('Перемешать','всё до дна','🥄',{tool:'jar',tip:'Мешай до самого дна: там прячутся сухие хлопья.'}),
- T('Положить','ягоды сверху','🫐',3,{tool:'jar',tip:'Ягоды кладём сверху и уже не мешаем — останутся целыми и красивыми.'}),
- T('Закрыть и поставить','в холодильник','🧊',1,{tool:'jar',fx:'lid',tip:'Крышку закрываем плотно. Утром каша готова — без плиты!',why:'Молоко нельзя оставлять в тепле: там быстро растут микробы. Поэтому — в холодильник на всю ночь.'})]},
-{id:'smoothie',name:'Смузи банан-клубника',icon:'🥤',lvl:1,ing:['банан','клубника','молоко или йогурт','блендер'],steps:[
- HANDS(), W('клубнику','🍓'),
- T('Убрать','хвостики','🍓',4,{tool:'board',fx:'pluck',tip:'Хвостик выкручиваем пальцами. Зелень в смузи горчит.',why:'Хвостики убираем после мытья — иначе вода попадёт внутрь ягоды.'}),
- P('банан','🍌',{tip:'Надломи хвостик и потяни кожуру полосками вниз.'}),
- C('банан кусочками','🍌',3,{adult:false,tip:'Большие куски блендер крутит плохо. Режь кусочки размером с крупную виноградину.'}),
- T('Сложить','фрукты в блендер','🍓',3,{tool:'blender',tip:'Пока кладём продукты, блендер выключен из розетки. Руки внутрь — только когда он выключен.'}),
- L('Налить','молоко','🥛',MILK,{tool:'blender',tip:'Жидкость — до отметки. Перельёшь — смузи брызнет из-под крышки.'}),
- K('Взбить','смузи','🌀',{tool:'blender',dur:5,b:'Стоп!',soft:true,tip:'Крышку придерживает взрослый. Взбиваем, пока не станет гладко, без комочков. Нож блендера очень острый.',why:'Сначала закрыли крышку — потом включаем. Иначе смузи разлетится по кухне.'})]},
-{id:'salad',name:'Салат из огурцов и помидоров',icon:'🥗',lvl:1,ing:['огурец','помидор','растительное масло','соль'],steps:[
- HANDS(), W('огурец','🥒'), W('помидор','🍅'),
- C('огурец полукружиями','🥒',4,{tip:'Разрежь огурец вдоль, положи плоской стороной на доску — он не будет кататься. Теперь режь полукружия.'}),
- C('помидор','🍅',4,{tip:'Помидор режь острым ножом, пилящими движениями — вперёд-назад. Тупой нож его раздавит.'}),
- L('Полить','маслом','🫒',OIL,{lo:.3,hi:.5,g:2,tip:'Масла совсем немного — пара ложек. Лей тонкой струйкой.'}),
- T('Посолить','салат','🧂',2,{fx:'salt',g:2,tip:'Соль берём щепоткой — тремя пальцами — и сыплем сверху, с высоты ладони. Так она ляжет ровно.',why:'Солим прямо перед едой: соль вытягивает сок, и салат «плывёт».'}),
- R('Перемешать','салат','🥄',{tip:'Две ложки, как ладошки: поднимаем снизу и опускаем. Помидоры не мнём.'})]},
-{id:'carrot',name:'Морковка с яблоком',icon:'🥕',lvl:1,ing:['морковь','яблоко','лимон','изюм'],steps:[
- HANDS(), W('морковку','🥕'), W('яблоко','🍎',{tip:'Шефы сначала моют всё, что пойдёт в блюдо, и только потом берут нож и тёрку.'}),
- P('морковку','🥕'),
- GR('морковку','🥕'),
- GR('яблоко','🍎',{tip:'Яблоко трём прямо с кожурой — в ней много витаминов. Серединку с косточками не трём.'}),
- T('Капнуть','лимонный сок','🍋',3,{fx:'drop',tip:'Три капли лимона — и тёртое яблоко не потемнеет.',why:'Лимон — сразу после яблока: через пару минут на воздухе яблоко уже коричневое.'}),
- T('Добавить','изюм','🍇',2,{tip:'Изюм заранее залей тёплой водой на 5 минут — станет мягким и сочным.'}),
- R('Перемешать','салат','🥄')]},
-
-{id:'egg',name:'Варёное яйцо',icon:'🥚',lvl:2,ing:['яйца','вода','кастрюля'],steps:[
- HANDS(),
- POTWATER({tip:'Воды столько, чтобы она покрыла яйцо на палец.',why:'Сначала вода, потом яйцо — в пустой кастрюле яйцо стукнется о дно.'}),
- T('Опустить','яйца ложкой','🥚',2,{tool:'pot',tip:'Яйцо опускаем ложкой, а не бросаем — скорлупа не треснет.'}),
- K('Сварить','яйца','♨️',{tool:'pot',dur:7,b:'Снять с огня!',tip:'Вода закипела — засекаем: 7 минут — желток мягкий, 10 минут — вкрутую. Дольше 12 — желток посереет.',late:'Переварили! Желток стал серым. Засечём время ещё раз.',why:'Плиту включает взрослый, когда яйца уже в воде.'}),
- T('Переложить','в холодную воду','🧊',2,{tool:'bowl',tip:'Холодная вода — главный секрет: яйцо остынет, и скорлупа снимется легко.'}),
- P('яйцо','🥚',{adult:false,tip:'Постучи яйцом по столу со всех сторон и покатай ладонью. Начинай чистить с широкого края — там воздушный кармашек.'}),
- C('яйцо пополам','🥚',1,{adult:false,tip:'Режь вдоль — половинки получатся красивые, с жёлтым солнышком.'})]},
-{id:'omelet',name:'Омлет',icon:'🍳',lvl:2,ing:['2 яйца','молоко','соль','сливочное масло'],steps:[
- HANDS(), E(2), HW(),
- L('Налить','молоко','🥛',MILK,{lo:.35,hi:.55,tip:'На одно яйцо — одна столовая ложка молока. Много молока — омлет будет водянистым.'}),
- T('Посолить','яйца','🧂',1,{fx:'salt',tip:'Совсем щепотку: на два яйца соли нужно меньше, чем кажется.'}),
- R('Взбить','вилкой','🍴',{n:1.3,tip:'Взбивай вилкой быстро, по кругу, пока не исчезнут прозрачные полоски белка.'}),
- T('Растопить','масло на сковороде','🧈',1,{tool:'pan',adult:true,tip:'Кусочек масла размером с ноготь. Сковорода горячая — рядом взрослый.',why:'Сначала греем сковороду с маслом. На холодную яйца прилипнут.'}),
- K('Жарить','под крышкой','🍳',{dur:7,tip:'Средний огонь и крышка — омлет поднимется пышным и не подгорит снизу. Готов, когда верх перестал дрожать.'})]},
-{id:'porridge',name:'Овсяная каша на молоке',icon:'🥣',lvl:2,ing:['молоко','овсяные хлопья','соль и сахар','сливочное масло'],steps:[
- HANDS(),
- L('Налить','молоко в кастрюлю','🥛',MILK,{tool:'pot',tip:'На полстакана хлопьев — стакан молока. Кастрюля с толстым дном — каша не пригорит.'}),
- K('Довести','молоко до кипения','♨️',{tool:'pot',dur:6,b:'Закипело!',late:'Молоко убежало! Оно «убегает» за секунду. Начнём заново и не отойдём от плиты.',tip:'Молоко «убегает» за секунду! Не отходи от плиты: пошла пенка и пузырьки — значит, кипит.',why:'Хлопья засыпаем в горячее молоко.'}),
- T('Всыпать','хлопья','🌾',3,{tool:'pot',tip:'Сыплем тонкой струйкой и сразу мешаем — не будет комков. Огонь — поменьше.'}),
- T('Добавить','соль и сахар','🧂',2,{tool:'pot',fx:'salt',tip:'Щепотка соли нужна даже в сладкой каше — без неё сахар «скучный».'}),
- R('Помешивать','кашу','🥄',{tool:'pot',n:1.2,tip:'Веди ложкой по самому дну — там каша прилипает первой.'}),
- K('Варить','5 минут','⏲️',{tool:'pot',dur:6,b:'Снять с огня!',tip:'5 минут на маленьком огне. Пока каша стоит, она загустеет ещё.'}),
- T('Положить','кусочек масла','🧈',1,{tool:'plate',tip:'Масло — в самом конце, в горячую кашу: оно тает и пахнет вкусно.'})]},
-{id:'toast',name:'Гренки',icon:'🍞',lvl:2,ing:['вчерашний хлеб','2 яйца','молоко','сливочное масло'],steps:[
- HANDS(), E(2), HW(),
- L('Налить','молоко','🥛',MILK,{lo:.45,hi:.65,tip:'Полстакана молока на два яйца — смесь станет как жидкий йогурт.'}),
- R('Взбить','яйца с молоком','🍴',{tip:'Взбивай, пока смесь не станет одного цвета, без полосок.'}),
- T('Растопить','масло на сковороде','🧈',1,{tool:'pan',adult:true,tip:'Масло растаяло и чуть шипит — сковорода готова.',why:'Сковорода должна быть горячей до того, как хлеб окунётся в смесь.'}),
- T('Обмакнуть','хлеб','🍞',2,{fx:'dip',tip:'Хлеб лучше вчерашний — он впитает смесь и не развалится. Обмакни с двух сторон на пару секунд — и сразу на сковороду.'}),
- K('Жарить','первую сторону','🍞',{dur:6,b:'Перевернуть!',tip:'Средний огонь, 2–3 минуты, до золотой корочки. Приподними край лопаткой и посмотри.'}),
- K('Жарить','вторую сторону','🍞',{dur:5,tip:'Переворачивай лопаткой от себя — тогда брызги масла летят не в тебя.'})]},
-{id:'macaroni',name:'Макароны с сыром',icon:'🧀',lvl:2,ing:['макароны','вода','соль','сыр','сливочное масло'],steps:[
- HANDS(), POTWATER({tip:'Макаронам нужен простор: на 100 граммов — литр воды.'}),
- BOIL(),
- T('Посолить','воду','🧂',2,{tool:'pot',fx:'salt',tip:'Солим кипящую воду: на литр — чайная ложка соли.',why:'Соль — в воду, до макарон: они впитывают её, пока варятся. Потом макароны уже не посолишь.'}),
- T('Засыпать','макароны','🍝',3,{tool:'pot',tip:'Только в кипящую воду! И сразу помешай, чтобы не слиплись.'}),
- GR('сыр','🧀',{tip:'Пока макароны варятся, шеф не ждёт без дела — трёт сыр. Холодный сыр трётся легче.'}),
- K('Варить','макароны','⏲️',{tool:'pot',dur:7,b:'Сварились!',tip:'Время написано на пачке. За минуту до конца попробуй: мягкие, но с упругой серединкой — готово.',late:'Разварились! Макароны стали мягкими, как каша. Попробуем снять вовремя.'}),
- T('Слить','воду','🫗',1,{tool:'pot',fx:'steam',adult:true,tip:'Дуршлаг ставим в раковину, сливает взрослый. Пар обжигает — лицо держим в стороне.'}),
- R('Смешать','с сыром и маслом','🥄',{tool:'pot',tip:'Мешай, пока макароны горячие: сыр растает и обнимет каждую макаронину.'})]},
-{id:'pancakes',name:'Блинчики',icon:'🥞',lvl:2,ing:['2 яйца','молоко','мука','сахар и соль','растительное масло'],steps:[
- HANDS(), E(2), HW(),
- T('Добавить','сахар и соль','🧂',2,{fx:'salt',tip:'Ложка сахара и щепотка соли. Без соли блины пресные, без сахара — бледные.'}),
- L('Влить','половину молока','🥛',MILK,{lo:.35,hi:.55,tip:'Сначала только половину молока. В густом тесте комочки легко размешать, в жидком — нет.',why:'Молоко — к яйцам, мука — потом, по ложке. Так не будет комочков.'}),
- T('Всыпать','муку','🌾',3,{tip:'Муку — по ложке, и после каждой мешай.'}),
- R('Размешать','тесто','🥄',{n:1.3,tip:'Мешаем от центра к краям, пока тесто не станет гладким, как сметана.'}),
- L('Влить','остальное молоко','🥛',MILK,{lo:.6,hi:.82,tip:'Теперь тесто жидкое, как сливки. Ложка масла прямо в тесто — и блины не прилипнут.'}),
- K('Жарить','первую сторону','🥞',{dur:5,b:'Перевернуть!',tip:'Половник теста — на горячую сковороду, и покрути её, чтобы тесто растеклось кругом. Края подрумянились — переворачиваем.'}),
- K('Жарить','вторую сторону','🥞',{dur:4,tip:'Вторая сторона жарится быстрее — полминуты.'})]},
-
-{id:'syrniki',name:'Сырники',icon:'🥮',lvl:3,ing:['творог','1 яйцо','сахар','мука','масло для жарки'],steps:[
- HANDS(),
- T('Выложить','творог в миску','🥣',1,{tip:'Лучше не мокрый творог. Если он мокрый — отожми его через марлю.'}),
- R('Размять','творог вилкой','🍴',{fx:'mash',n:1.2,tip:'Разминаем до мелких крупинок — сырники будут нежными.'}),
- E(1), HW(),
- T('Добавить','сахар','🍬',2,{fx:'salt',tip:'Две ложки сахара на пачку творога. Больше — сырники пригорят.'}),
- T('Всыпать','муку','🌾',2,{tip:'Муки немного — две-три ложки. Много муки — и сырники станут резиновыми.'}),
- R('Перемешать','тесто','🥄'),
- T('Слепить','сырники','🥮',4,{tool:'board',tip:'Обмакни руки в муку — тесто не прилипнет. Скатай шарик и прижми в лепёшку толщиной в палец.'}),
- R('Обвалять','в муке','🌾',{tool:'board',fx:'flour',tip:'Тонкий слой муки снаружи — это будущая хрустящая корочка.'}),
- K('Жарить','первую сторону','🥮',{dur:6,b:'Перевернуть!',tip:'Средний огонь: внутри прожарится, снаружи не сгорит. Около 3 минут, до золотого цвета.'}),
- K('Жарить','вторую сторону','🥮',{dur:6,tip:'Накрой крышкой на пару минут — сырники пропекутся внутри.'})]},
-{id:'mash',name:'Картофельное пюре',icon:'🥔',lvl:3,ing:['картофель','вода','соль','молоко','сливочное масло'],steps:[
- HANDS(), W('картошку','🥔',{n:1.2,tip:'Картошка растёт в земле — три её щёткой под водой, пока не станет чистой.'}),
- P('картошку','🥔',{n:1.3}),
- C('картошку','🥔',3,{tip:'Режь кусочки одного размера — тогда они сварятся одновременно. Сначала разрежь пополам и положи плоской стороной.'}),
- L('Залить','холодной водой','💧',WATER,{tool:'pot',tip:'Картошку кладём в холодную воду и греем вместе — она прогреется ровно, снаружи не развалится.'}),
- T('Посолить','воду','🧂',1,{tool:'pot',fx:'salt',tip:'Картошку солим в начале варки — так соль попадёт внутрь.'}),
- K('Варить','20 минут','⏲️',{tool:'pot',dur:7,b:'Проверить!',tip:'Проткни кусочек ножом: входит легко, как в масло, — готово.',late:'Разварилась в кашу! Снимем пораньше.'}),
- T('Слить','воду','🫗',1,{tool:'pot',fx:'steam',adult:true,tip:'Сливает взрослый: пар и кипяток обжигают.'}),
- L('Влить','тёплое молоко','🥛',MILK,{tool:'pot',lo:.3,hi:.5,tip:'Молоко подогрей. С холодным пюре станет серым и с комками.'}),
- T('Добавить','масло','🧈',1,{tool:'pot'}),
- R('Растолочь','толкушкой','🥔',{tool:'pot',fx:'mash',n:1.4,tip:'Толчём, пока картошка горячая. Блендером нельзя — пюре станет клейким, как тесто.'})]},
-{id:'soup',name:'Овощной суп',icon:'🍲',lvl:3,ing:['картофель','морковь','лук','вода','соль','зелень'],steps:[
- HANDS(), W('картошку и морковку','🥕',{n:1.2}),
- P('картошку и морковку','🥔',{n:1.3}),
- P('лук','🧅',{tip:'С лука снимаем сухую шкурку пальцами. Срежь кончики — так чистить легче.'}),
- C('лук','🧅',4,{tip:'Лук щиплет глаза. Холодная луковица и острый нож — щиплет меньше. Режь кубиком.'}),
- C('морковку','🥕',4,{tip:'Морковка круглая — разрежь её вдоль, положи плоской стороной и режь полукружиями.'}),
- C('картошку кубиками','🥔',3,{tip:'Кубики размером с кубик сахара — сварятся одновременно.'}),
- POTWATER(),
- BOIL(),
- T('Опустить','овощи','🥕',3,{tool:'pot',tip:'Опускай ложкой, близко к воде — так не брызнет кипятком.'}),
- K('Варить','20 минут','⏲️',{tool:'pot',dur:7,b:'Готово!',tip:'Огонь поменьше, крышка чуть приоткрыта. Картошка мягкая — суп готов.'}),
- T('Посолить','суп','🧂',2,{tool:'pot',fx:'salt',tip:'Солим и пробуем чистой ложкой. Пробуешь ещё раз — бери новую ложку.'}),
- T('Добавить','зелень','🌿',2,{tool:'pot',tip:'Зелень — в самом конце: от долгой варки она теряет цвет и запах.'})]},
-{id:'nuggets',name:'Куриные наггетсы в духовке',icon:'🍗',lvl:3,ing:['куриное филе','1 яйцо','панировочные сухари','соль'],steps:[
- HANDS(), OVEN(200),
- T('Взять','отдельную доску','🟥',1,{tool:'board',tip:'Для сырого мяса — своя доска. Овощи на ней не режем, пока её не вымыли горячей водой с мылом.',why:'Сначала готовим отдельную доску и только потом достаём сырую курицу.'}),
- C('курицу кусочками','🍗',4,{tip:'Курицу НЕ моем под краном: брызги разносят микробов по всей кухне. Режем кусочки размером с половину ладошки.'}),
- E(1,{tip:'Яйцо — это «клей» для сухарей.'}),
- R('Взбить','яйцо','🍴'),
- T('Обмакнуть','курицу в яйцо','🍗',3,{fx:'dip',tip:'Одна рука «мокрая» — для яйца, другая «сухая» — для сухарей. Так пальцы не обрастут панировкой.'}),
- R('Обвалять','в сухарях','🍞',{fx:'flour',tip:'Прижми кусочек к сухарям со всех сторон — корочка будет ровной.'}),
- T('Выложить','на противень','🍗',4,{tool:'tray',tip:'Кладём не впритык: между кусочками ходит горячий воздух, и корочка хрустит со всех сторон.'}),
- HW({tip:'Закончили с сырой курицей — руки с мылом, а нож и доску в мойку с горячей водой.'}),
- K('Запекать','20 минут','🔥',{tool:'oven',dur:7,b:'Достать!',tip:'Противень достаёт взрослый в прихватках. Разрежь один наггетс: внутри белый, без розового — готово.'})]},
-{id:'pasta',name:'Паста с томатным соусом',icon:'🍝',lvl:3,ing:['спагетти','помидоры','чеснок','оливковое масло','соль','базилик'],steps:[
- HANDS(), W('помидоры','🍅'),
- P('чеснок','🧄',{tip:'Прижми зубчик ножом плашмя и надави ладонью — шкурка лопнет и слезет сама.'}),
- C('помидоры','🍅',4,{tip:'Режь пилящими движениями. Жёсткий пятачок у хвостика вырежи.'}),
- C('чеснок','🧄',3,{tip:'Чеснок режем мелко-мелко. Зубчик маленький — «кошачья лапка» особенно аккуратно.'}),
- POTWATER(), BOIL(),
- T('Посолить','воду','🧂',2,{tool:'pot',fx:'salt',tip:'Вода для пасты солёная, как море.'}),
- T('Засыпать','спагетти','🍝',2,{tool:'pot',tip:'Опускаем спагетти веером. Пока они варятся 9 минут, делаем соус — шеф всё успевает.'}),
- L('Налить','масло на сковороду','🫒',OIL,{tool:'pan',lo:.25,hi:.45,adult:true,tip:'Две ложки оливкового масла. Сковорода на среднем огне.'}),
- K('Обжарить','чеснок','🧄',{dur:4,b:'Запахло!',late:'Чеснок потемнел и горчит. Жарим снова, совсем недолго.',tip:'Чеснок жарим полминуты, пока не запахнет. Потемнел — станет горьким.',why:'Чеснок первым: он отдаёт аромат маслу, а масло — всему соусу.'}),
- K('Тушить','помидоры','🍅',{dur:6,tip:'Помидоры на среднем огне 10 минут — и они превращаются в соус. Посоли щепоткой.'}),
- T('Слить','воду','🫗',1,{tool:'pot',fx:'steam',adult:true,tip:'Сливает взрослый. Пар обжигает — лицо в сторону.'}),
- R('Смешать','с соусом','🥄',{tool:'pan',tip:'Спагетти — прямо в сковороду с соусом и перемешай щипцами.'}),
- T('Украсить','базиликом','🌿',3,{tool:'plate',tip:'Листики базилика рвём руками — нож делает их тёмными.'})]},
-{id:'pizza',name:'Домашняя пицца',icon:'🍕',lvl:3,ing:['готовая основа','томатный соус','сыр моцарелла','помидор','сладкий перец'],steps:[
- HANDS(), OVEN(220,{tip:'Пицце нужна очень горячая духовка — тогда тесто хрустит.'}),
- W('помидор и перец','🫑'),
- C('помидор','🍅',3,{tip:'Тонкие кружочки — толстые дадут много сока, и пицца размокнет.'}),
- C('перец','🫑',3,{tip:'Разрежь перец пополам, вынь семечки и белые перегородки — они горькие.'}),
- GR('сыр','🧀'),
- R('Намазать','соус','🥫',{tool:'tray',fx:'spread',tip:'Соус — тонким слоем, ложкой по кругу. По краю оставь чистую полоску — это будет бортик.'}),
- T('Посыпать','сыром','🧀',3,{tool:'tray',fx:'salt',tip:'Сыр — под овощи: он расплавится и приклеит их.'}),
- T('Разложить','овощи','🍅',4,{tool:'tray',tip:'Раскладывай равномерно — чтобы в каждом кусочке было всего понемногу.'}),
- K('Запекать','10 минут','🔥',{tool:'oven',dur:6,b:'Достать!',tip:'Сыр пузырится, край золотой — готово. Достаёт взрослый в прихватках.'}),
- C('пиццу','🍕',3,{tool:'board',tip:'Дай пицце остыть 2 минуты. Режут роликовым ножом или большим ножом — от центра к краю.'})]},
-
-{id:'muffins',name:'Банановые кексы',icon:'🧁',lvl:4,ing:['2 спелых банана','1 яйцо','молоко и масло','сахар','мука с разрыхлителем','формочки'],steps:[
- HANDS(), OVEN(180),
- P('бананы','🍌',{tip:'Чем темнее кожура, тем слаще банан. Для кексов лучше всего бананы с точками.'}),
- R('Размять','бананы вилкой','🍴',{fx:'mash',n:1.2,tip:'Разминаем в пюре. Маленькие кусочки можно оставить — будет вкусно.'}),
- E(1), HW(),
- L('Влить','молоко и масло','🥛','#f4ead0',{lo:.4,hi:.6,tip:'Растительное масло делает кексы влажными и мягкими.'}),
- T('Всыпать','сахар','🍬',2,{fx:'salt',tip:'Бананы уже сладкие — сахара нужно немного.'}),
- T('Всыпать','муку с разрыхлителем','🌾',3,{tip:'Разрыхлитель — это будущие пузырьки: в духовке они поднимают кексы. Смешай его с мукой заранее.',why:'Сухое — в конце, к жидкому. Так тесто мешается быстро и не перемешивается лишнего.'}),
- R('Перемешать','лопаткой','🥄',{n:.7,tip:'Главный секрет кексов: мешай только пока не исчезнет сухая мука. Перемешаешь — кексы будут резиновыми.'}),
- T('Разложить','по формочкам','🧁',6,{tool:'tray',tip:'Заполняй формочки на две трети — кексы поднимутся.'}),
- K('Печь','20 минут','🔥',{tool:'oven',dur:7,b:'Достать!',tip:'Проткни кекс зубочисткой: вышла сухой — готово. Прилипло тесто — ещё 3–5 минут.'}),
- T('Остудить','на решётке','🧊',1,{tool:'tray',tip:'10 минут на решётке — кексы «досыхают» и не разваливаются.'})]},
-{id:'charlotte',name:'Яблочная шарлотка',icon:'🥧',lvl:4,ing:['3–4 яблока','лимон','3 яйца','стакан сахара','стакан муки','масло для формы'],steps:[
- HANDS(), OVEN(180),
- R('Смазать','форму маслом','🧈',{tool:'tray',fx:'spread',tip:'Смажь дно и бортики, присыпь мукой — шарлотка выйдет из формы целиком.',why:'Форму готовим заранее: тесто ждать не любит — пузырьки в нём опадают.'}),
- W('яблоки','🍏'),
- C('яблоки дольками','🍏',4,{tip:'Четвертинки, вырезать серединку, потом дольки. Кожицу можно оставить.'}),
- T('Сбрызнуть','лимоном','🍋',2,{fx:'drop',tip:'Лимон — чтобы яблоки не потемнели, пока мы делаем тесто.'}),
- E(3), HW(),
- T('Всыпать','сахар','🍬',2,{fx:'salt',tip:'Стакан сахара на три яйца.'}),
- R('Взбить','в пышную пену','🌀',{n:1.8,adult:true,tip:'Взбиваем миксером минут 5, пока масса не станет светлой и пышной. Эти пузырьки и поднимут пирог.'}),
- T('Всыпать','муку','🌾',3,{tip:'Муку — частями, по трети.'}),
- R('Перемешать','снизу вверх','🥄',{n:.7,tip:'Лопаткой, снизу вверх, бережно — как будто укладываешь одеяло. Резко мешать нельзя: пена опадёт.'}),
- T('Выложить','яблоки в форму','🍏',3,{tool:'tray'}),
- L('Залить','тестом','🥣','#f3d98a',{tool:'tray',lo:.6,hi:.85,tip:'Тесто — сверху: оно само протечёт между яблоками.'}),
- K('Печь','40 минут','🔥',{tool:'oven',dur:8,b:'Достать!',tip:'Первые 30 минут дверцу не открываем — пирог опадёт. Готовность проверяем сухой зубочисткой.'})]}
+/* ============ ДАННЫЕ ============ */
+const FRIDGE=[ // x = центр, y = низ предмета (доли картинки), w = ширина
+ {id:'milk',name:'молоко',x:.445,y:.318,w:.07,need:1},
+ {id:'cheese',name:'сыр',x:.565,y:.318,w:.12,no:'Сыр в этот омлет не кладём. Оставим его в холодильнике.'},
+ {id:'eggs',name:'яйца',x:.5,y:.505,w:.17,need:1},
+ {id:'tomato',name:'помидор',x:.43,y:.68,w:.09,no:'Помидор нужен для салата, а не для омлета.'},
+ {id:'cucumber',name:'огурец',x:.58,y:.68,w:.15,no:'Огурец пригодится для салата. Для омлета — не нужен.'},
+ {id:'butter',name:'масло',x:.12,y:.545,w:.12,need:1}
 ];
-
-const FUN=[
- {v:'Попробовать',o:'прямо сейчас',i:'😋',fun:'Пробовать будем в конце — когда блюдо готово.'},
- {v:'Позвать',o:'кота на помощь',i:'🐈',fun:'Котам на кухонный стол нельзя — у них на лапках уличная грязь.'},
- {v:'Посмотреть',o:'мультики',i:'📺',fun:'Шеф на кухне не отвлекается: рядом нож и горячее.'}
+const STEPS=[
+ {id:'wash',img:'wash',t:'Помыть руки',k:'rub',n:1,fx:'foam',
+  show:'Любая готовка начинается с чистых рук. Тёплая вода, мыло и 20 секунд — это два раза спеть «С днём рождения». Потри между пальцами и под ногтями.',
+  do:'Твоя очередь: води пальцем по картинке — мой руки.',why:'Руки только что трогали ручку холодильника. На ней микробы со всего дома.'},
+ {id:'crack',img:'crack',t:'Разбить яйца в миску',k:'tap',n:2,
+  show:'Берём два яйца. Стукни яйцом о плоский стол — не о край миски: так в миску не попадёт скорлупа. Большими пальцами раскрой трещину прямо над миской.',
+  do:'Нажми на картинку 2 раза — по разу на каждое яйцо.',why:'Яйца — основа омлета. К ним потом добавим молоко и соль.'},
+ {id:'wash2',img:'wash',t:'Снова помыть руки',k:'rub',n:.7,fx:'foam',
+  show:'Мы трогали сырые яйца. На скорлупе бывают микробы, поэтому руки — снова с мылом. Настоящие шефы делают так всегда.',
+  do:'Моем руки ещё раз — води пальцем по картинке.',why:'После сырых яиц руки моем сразу, ещё до молока и соли.'},
+ {id:'milk',img:'milk',t:'Налить молоко',k:'hold',lo:.4,hi:.6,
+  show:'На одно яйцо — одна столовая ложка молока. У нас два яйца, значит две ложки. Много молока — и омлет станет водянистым.',
+  do:'Держи кнопку «Лить» и отпусти, когда молоко дойдёт до зелёной полоски.',why:'Молоко к яйцам — до того, как взбиваем. Тогда смесь станет ровной.'},
+ {id:'salt',img:'salt',t:'Посолить',k:'tap',n:1,
+  show:'Соль берём щепоткой — тремя пальцами — и сыплем с высоты ладони. На два яйца хватит одной маленькой щепотки.',
+  do:'Нажми один раз — одна щепотка.',why:'Солим до взбивания: соль быстро растворится в смеси.'},
+ {id:'whisk',img:'whisk',t:'Взбить вилкой',k:'rub',n:1.4,fx:'froth',
+  show:'Вилкой быстро по кругу, пока смесь не станет одного цвета, без прозрачных полосок белка. Миску чуть наклони к себе — так удобнее.',
+  do:'Води пальцем по кругу — взбиваем.',why:'Взбиваем, когда в миске уже всё: яйца, молоко и соль.'},
+ {id:'butter',img:'butter',t:'Растопить масло на сковороде',k:'tap',n:1,adult:1,
+  show:'Плиту включает взрослый, огонь средний. Кладём кусочек масла размером с ноготь. Масло растаяло и тихо шипит — сковорода готова.',
+  do:'Нажми, чтобы положить масло на сковороду.',why:'Сковороду греем до того, как выливаем смесь. На холодную омлет прилипнет.'},
+ {id:'cook',img:'cook',t:'Жарить под крышкой',k:'time',dur:7,adult:1,
+  show:'Выливаем смесь и накрываем крышкой. Огонь средний, не сильный. Через 4–5 минут омлет поднимется, а верх перестанет дрожать — значит, готов.',
+  do:'Жми «Готово!», когда стрелка в зелёной зоне.',why:'Жарим последним — когда всё смешано и сковорода горячая.',
+  late:'Подгорело снизу! Огонь был слишком сильный или мы ждали слишком долго. Пробуем ещё раз.'}
 ];
-const KIND_HOW={rub:'Три пальцем по картинке — туда-сюда',tap:'Нажимай на картинку',cut:'Нажимай на красный пунктир — режем',hold:'Держи кнопку и отпусти, когда дойдёт до зелёной полоски',time:'Жми кнопку, когда стрелка в зелёной зоне'};
-const FXC={water:['#8fcbed','#bfe6fb'],bubble:['#ffffff','#d9f0ff'],peel:['#c9893a','#e7b45a','#7aa346'],shred:['#f08a24','#f5c542','#f7e8b0'],stir:['#f6f0ea','#e9dcc8'],spread:['#f7e08a','#f3d06a'],mash:['#f3dfa2','#e9cf86'],flour:['#ffffff','#f1ebe0']};
+const BOWL={crack:[.5,.72],milk:[.55,.72],salt:[.6,.62],whisk:[.5,.62]};
+const SOON=['Бутерброд с сыром','Фруктовый салат','Ленивая овсянка','Смузи','Салат из овощей','Морковка с яблоком','Варёное яйцо','Каша на молоке','Гренки','Макароны с сыром','Блинчики','Сырники','Картофельное пюре','Овощной суп','Наггетсы','Паста с томатами','Пицца','Банановые кексы','Шарлотка'];
+const FUN=[{t:'Попробовать сырую смесь',e:'🙅',msg:'Сырые яйца не пробуем — в них могут быть микробы. Пробовать будем готовый омлет.'},{t:'Включить плиту на максимум',e:'🔥',msg:'Сильный огонь сожжёт омлет снизу, а внутри он останется сырым. Огонь средний — и включает его взрослый.'}];
 
-/* ================= ПЕРСОНАЖИ ================= */
-function squirrelSVG(c,hat){
- return `<svg viewBox="0 0 140 170" aria-hidden="true">
- <path d="M92 150C140 145 146 86 124 60 110 44 124 18 104 10 84 4 70 28 86 48 102 68 98 102 80 124Z" fill="${c.f2}"/>
- <path d="M100 40c8 4 14 12 14 22" stroke="${c.f}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>
- <ellipse cx="60" cy="128" rx="38" ry="40" fill="${c.f}"/>
- <ellipse cx="60" cy="134" rx="24" ry="30" fill="${c.b}"/>
- <path d="M38 114h44v34q-22 10-44 0z" fill="${c.apron}"/>
- <path d="M42 114q18-10 36 0" stroke="${c.apron}" stroke-width="4" fill="none"/>
- <path d="M32 46 28 12 50 36Z" fill="${c.f}"/><path d="M88 46 92 12 70 36Z" fill="${c.f}"/>
- <path d="M28 12l-4-8M28 12l2-9M92 12l4-8M92 12l-2-9" stroke="${c.f2}" stroke-width="3" stroke-linecap="round"/>
- <circle cx="60" cy="70" r="34" fill="${c.f}"/>
- <ellipse cx="60" cy="84" rx="22" ry="16" fill="${c.b}"/>
- <circle cx="47" cy="66" r="6.5" fill="#1d1a22"/><circle cx="73" cy="66" r="6.5" fill="#1d1a22"/>
- <circle cx="49" cy="64" r="2.2" fill="#fff"/><circle cx="75" cy="64" r="2.2" fill="#fff"/>
- <ellipse cx="60" cy="78" rx="5.5" ry="4" fill="#3a2220"/>
- <path d="M54 85q6 6 12 0" stroke="#3a2220" stroke-width="2.5" fill="none" stroke-linecap="round"/>
- <rect x="56" y="86" width="8" height="6" rx="2" fill="#fff"/>
- <circle cx="38" cy="80" r="6" fill="#f49a9a" opacity=".55"/><circle cx="82" cy="80" r="6" fill="#f49a9a" opacity=".55"/>
- <ellipse cx="40" cy="152" rx="11" ry="8" fill="${c.f2}"/><ellipse cx="80" cy="152" rx="11" ry="8" fill="${c.f2}"/>
- ${hat}
- </svg>`;
-}
-const KOKO={f:'#d9792b',f2:'#b05a18',b:'#f8e2c4',apron:'#ffffff'};
-const OREO={f:'#3d3536',f2:'#231e1f',b:'#f6f3ee',apron:'#7cc4ea'};
-const TOQUE='<path d="M40 40c-9-2-10-16 0-18 2-11 16-13 20-5 4-8 18-6 20 5 10 2 9 16 0 18v6H40z" fill="#fff" stroke="#e1d9cc" stroke-width="2"/>';
-const BANDANA='<path d="M28 50q32-26 64 0l-6 -14q-26-16-52 0z" fill="#e0503a"/><circle cx="44" cy="40" r="2" fill="#fff"/><circle cx="62" cy="34" r="2" fill="#fff"/><circle cx="78" cy="40" r="2" fill="#fff"/>';
-const SVG_FLY=`<svg viewBox="0 0 60 50"><ellipse class="wing" cx="20" cy="16" rx="13" ry="9" fill="#cfeaff" opacity=".85" stroke="#9cc7e6"/><ellipse class="wing" cx="40" cy="16" rx="13" ry="9" fill="#cfeaff" opacity=".85" stroke="#9cc7e6"/><ellipse cx="30" cy="30" rx="13" ry="11" fill="#2b2d33"/><path d="M20 28h20M21 34h18" stroke="#5c6070" stroke-width="2"/><circle cx="23" cy="22" r="6" fill="#c0392b"/><circle cx="37" cy="22" r="6" fill="#c0392b"/><circle cx="24" cy="21" r="2" fill="#fff"/><circle cx="38" cy="21" r="2" fill="#fff"/><path d="M20 40l-6 8M30 41v8M40 40l6 8" stroke="#2b2d33" stroke-width="2"/></svg>`;
-const SVG_FROG=`<svg viewBox="0 0 80 64"><ellipse cx="14" cy="54" rx="13" ry="7" fill="#3c8a3a"/><ellipse cx="66" cy="54" rx="13" ry="7" fill="#3c8a3a"/><ellipse cx="40" cy="40" rx="30" ry="20" fill="#5cb85c"/><ellipse cx="40" cy="46" rx="18" ry="11" fill="#d8f0b8"/><circle cx="26" cy="20" r="11" fill="#5cb85c"/><circle cx="54" cy="20" r="11" fill="#5cb85c"/><circle cx="26" cy="19" r="6" fill="#fff"/><circle cx="54" cy="19" r="6" fill="#fff"/><circle cx="27" cy="20" r="3.4" fill="#1d1a22"/><circle cx="55" cy="20" r="3.4" fill="#1d1a22"/><path d="M28 36q12 8 24 0" stroke="#2d6b2b" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="20" cy="34" r="3" fill="#f49a9a" opacity=".6"/><circle cx="60" cy="34" r="3" fill="#f49a9a" opacity=".6"/></svg>`;
-const SVG_CAT=`<svg viewBox="0 0 140 120"><path d="M30 44 26 4 58 28Z" fill="#8e8f99"/><path d="M110 44 114 4 82 28Z" fill="#8e8f99"/><path d="M33 34 31 14 48 28Z" fill="#f2b3b3"/><path d="M107 34 109 14 92 28Z" fill="#f2b3b3"/><ellipse cx="70" cy="58" rx="46" ry="38" fill="#a3a4ae"/><path d="M58 24l4 14M70 22v15M82 24l-4 14" stroke="#7b7c86" stroke-width="5" stroke-linecap="round"/><ellipse cx="52" cy="56" rx="8" ry="10" fill="#f6e27a"/><ellipse cx="88" cy="56" rx="8" ry="10" fill="#f6e27a"/><ellipse cx="52" cy="57" rx="3" ry="8" fill="#1d1a22"/><ellipse cx="88" cy="57" rx="3" ry="8" fill="#1d1a22"/><path d="M66 70h8l-4 5z" fill="#e57d8a"/><path d="M70 75q-6 6-12 2M70 75q6 6 12 2" stroke="#4a4a52" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M40 72 14 68M40 77 16 80M100 72l26-4M100 77l24 3" stroke="#fff" stroke-width="2"/><ellipse cx="34" cy="104" rx="20" ry="13" fill="#a3a4ae"/><ellipse cx="106" cy="104" rx="20" ry="13" fill="#a3a4ae"/><path d="M26 110v-6M34 111v-7M42 110v-6M98 110v-6M106 111v-7M114 110v-6" stroke="#7b7c86" stroke-width="2.5" stroke-linecap="round"/></svg>`;
-const SVG_JUG=`<svg viewBox="0 0 60 80"><path d="M44 26c12 0 14 22 2 24" stroke="#fff" stroke-width="6" fill="none"/><path d="M12 10h30l4 10v50q0 6-6 6H16q-6 0-6-6V20z" fill="#fff" stroke="#d6dde2" stroke-width="2"/><path d="M12 10h30l-4-6H16z" fill="#e8eef2"/><rect x="10" y="34" width="36" height="16" fill="#7cc4ea"/><text x="28" y="45.5" font-size="8" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" fill="#fff">МОЛОКО</text></svg>`;
-
-/* ================= СОСТОЯНИЕ ================= */
+/* ============ СОСТОЯНИЕ ============ */
 const $=s=>document.querySelector(s);
-const NAMES={koko:'Коко',oreo:'Орео'};
-let SAVE={stars:{},voice:true,all:false};
-try{SAVE=Object.assign(SAVE,JSON.parse(localStorage.getItem('koko-oreo')||'{}'));}catch(e){}
-function persist(){try{localStorage.setItem('koko-oreo',JSON.stringify(SAVE));}catch(e){}}
-const G={dish:null,steps:[],i:0,phase:'menu',mistakes:0,spoils:0,act:null,pests:[],spawnT:0,running:false};
-const label=s=>`${s.v} ${s.o}`;
-const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+let SAVE={learned:false,stars:0,voice:true};
+try{SAVE=Object.assign(SAVE,JSON.parse(localStorage.getItem('gotovlyu-sam')||'{}'));}catch(e){}
+const persist=()=>{try{localStorage.setItem('gotovlyu-sam',JSON.stringify(SAVE));}catch(e){}};
+const G={mode:'learn',phase:'',i:-1,taken:[],wrongFridge:0,mistakes:0,flySpoils:0,act:null,fly:null,flyPlan:{}};
 const rnd=(a,b)=>a+Math.random()*(b-a);
-const pickOne=a=>a[Math.random()*a.length|0];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const img=n=>`art/${n}.webp`;
+const SPOILS=['Муха села в миску! На лапках у мух микробы. Если отходишь от еды — накрой миску тарелкой.','Муха побывала в еде. Шефы не оставляют миски открытыми.'];
 
-/* ================= ГОЛОС ================= */
+/* ============ ГОЛОС ============ */
 let ruVoice=null;
 function loadVoices(){if(!window.speechSynthesis)return;const v=speechSynthesis.getVoices();ruVoice=v.find(x=>/^ru/i.test(x.lang)&&/Milena|Милена/i.test(x.name))||v.find(x=>/^ru/i.test(x.lang))||null;}
 if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
-function speak(t){
- if(!SAVE.voice||!window.speechSynthesis)return;
- try{speechSynthesis.cancel();
-  const clean=t.replace(/[«»]/g,'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/°/g,' градусов');
-  const u=new SpeechSynthesisUtterance(clean);u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;u.rate=1;speechSynthesis.speak(u);}catch(e){}
-}
-function setVoiceBtn(){const b=$('#voiceBtn');b.setAttribute('aria-pressed',SAVE.voice);b.textContent=SAVE.voice?'🔊 Голос':'🔇 Без голоса';}
-$('#voiceBtn').onclick=()=>{SAVE.voice=!SAVE.voice;persist();setVoiceBtn();if(!SAVE.voice&&window.speechSynthesis)speechSynthesis.cancel();};
+function speak(t){if(!SAVE.voice||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t.replace(/[«»]/g,'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,''));u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;speechSynthesis.speak(u);}catch(e){}}
+function setVoice(){const b=$('#voiceBtn');b.setAttribute('aria-pressed',SAVE.voice);b.textContent=SAVE.voice?'🔊 Голос':'🔇 Без голоса';}
+$('#voiceBtn').onclick=()=>{SAVE.voice=!SAVE.voice;persist();setVoice();if(!SAVE.voice&&window.speechSynthesis)speechSynthesis.cancel();};
 
-/* ================= ЭКРАНЫ ================= */
-function show(id){for(const s of ['menu','intro','game','done'])$('#'+s).hidden=s!==id;$('#back').hidden=id==='menu';$('#score').hidden=id!=='game';window.scrollTo(0,0);}
-function nutsHTML(n){return [0,1,2].map(k=>`<span class="nut ${k<n?'on':''}">🌰</span>`).join('');}
-function unlocked(idx){return SAVE.all||idx===0||(SAVE.stars[DISHES[idx-1].id]||0)>0;}
-function renderMenu(){
- G.phase='menu';G.running=false;clearPests();
- $('#title').innerHTML='Коко и Орео готовят<small>20 блюд, которые можно приготовить самому</small>';
- $('#heroDuo').innerHTML=squirrelSVG(KOKO,TOQUE)+squirrelSVG(OREO,BANDANA);
- let h='';
- for(const l of [1,2,3,4]){
-  h+=`<div class="lvl"><h2>Уровень ${l}. ${LVLS[l][0]}</h2><span>${LVLS[l][1]}</span></div><div class="grid">`;
-  DISHES.forEach((d,idx)=>{if(d.lvl!==l)return;const ok=unlocked(idx);const s=SAVE.stars[d.id]||0;
-   h+=`<button class="dish" data-i="${idx}" ${ok?'':'disabled'}><span class="no">№ ${idx+1}</span><span class="em">${ok?d.icon:'🔒'}</span><b>${d.name}</b><span class="nuts">${nutsHTML(s)}</span></button>`;});
-  h+='</div>';
- }
- $('#levels').innerHTML=h;
- document.querySelectorAll('.dish').forEach(b=>b.onclick=()=>openIntro(+b.dataset.i));
- $('#unlockAll').checked=SAVE.all;
+/* ============ ЭКРАНЫ ============ */
+function show(id){for(const s of ['menu','game','final'])$('#'+s).hidden=s!==id;$('#back').hidden=id==='menu';window.scrollTo(0,0);}
+const starsHTML=n=>[0,1,2].map(k=>`<span class="star ${k<n?'on':''}">⭐</span>`).join('');
+function menu(){
+ G.phase='menu';stopFly();
+ $('#title').innerHTML='Готовлю сам<small>Шеф Вера учит готовить по-настоящему</small>';
+ $('#soloBtn').disabled=!SAVE.learned;
+ $('#soloNote').textContent=SAVE.learned?'Без подсказок: вспомни порядок сам':'Откроется после урока с шефом';
+ $('#menuStars').innerHTML=SAVE.stars?starsHTML(SAVE.stars):'';
+ $('#soon').innerHTML=SOON.map(s=>`<span>${s}</span>`).join('');
  show('menu');
 }
-$('#unlockAll').onchange=e=>{SAVE.all=e.target.checked;persist();renderMenu();};
-$('#back').onclick=()=>{if(window.speechSynthesis)speechSynthesis.cancel();renderMenu();};
-$('#menuBtn').onclick=()=>renderMenu();
+$('#back').onclick=()=>{if(window.speechSynthesis)speechSynthesis.cancel();menu();};
+$('#learnBtn').onclick=()=>start('learn');
+$('#soloBtn').onclick=()=>start('solo');
 
-function openIntro(idx){
- const d=DISHES[idx];G.dishIdx=idx;G.dish=d;
- $('#title').innerHTML=`${d.name}<small>Уровень ${d.lvl}. ${LVLS[d.lvl][0]}</small>`;
- $('#inIcon').textContent=d.icon;$('#inName').textContent=d.name;
- $('#inLvl').textContent=`${d.steps.length} шагов · уровень ${d.lvl}`;
- $('#inIng').innerHTML=d.ing.map(x=>`<li>${x}</li>`).join('');
- const ad=d.steps.filter(s=>s.adult).map(s=>label(s));
- $('#inAdult').innerHTML=ad.length?`<b>Со взрослым:</b> ${[...new Set(ad)].join(', ')}.`:'<b>Это блюдо без плиты.</b> Нож берём детский или вместе со взрослым.';
- show('intro');
- speak(`${d.name}. Что понадобится: ${d.ing.join(', ')}.`);
-}
-$('#startBtn').onclick=()=>startDish();
-
-/* ================= ИГРА ================= */
-function startDish(){
- const d=G.dish;
- G.steps=d.steps.map(s=>Object.assign({},s));
- G.i=0;G.mistakes=0;G.spoils=0;G.phase='choose';G.act=null;
- clearPests();G.spawnT=6;G.running=true;
- $('#koko').innerHTML='<div class="bubble"></div>'+squirrelSVG(KOKO,TOQUE)+'<span class="name">Коко</span>';
- $('#oreo').innerHTML='<div class="bubble"></div>'+squirrelSVG(OREO,BANDANA)+'<span class="name">Орео</span>';
- $('#jug').innerHTML=SVG_JUG;$('#jug').className='';
- G.stack=[];$('#work').innerHTML='';
- show('game');
- updScore();
- say('koko','Готовим: '+d.name.toLowerCase()+'!',2200);
- setTimeout(()=>say('oreo','Прогоняй муху, лягушку и кота!',2600),900);
- startStep();
-}
-function updScore(){$('#score').innerHTML=`🔀 ${G.mistakes} · 🦠 ${G.spoils}`;$('#score').title='Ошибки порядка · испорчено вредителями';}
-function renderDots(){
- $('#dots').innerHTML=G.steps.map((s,k)=>`<i class="${k<G.i?'d':k===G.i?'c':''}"></i>`).join('');
- $('#stepNo').textContent=`Шаг ${G.i+1} из ${G.steps.length}`;
-}
-function actor(){return G.i%2?'oreo':'koko';}
-function say(who,text,ms){
- const b=document.querySelector('#'+who+' .bubble');if(!b)return;
- b.textContent=text;b.classList.add('on');clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('on'),ms||1800);
-}
-function setTip(head,text,oops){$('#tipHead').textContent=head;$('#tip').textContent=text;$('#tipbox').classList.toggle('oops',!!oops);}
-
-function setWork(step,mode){
- const w=$('#work');w.onpointerdown=w.onpointermove=w.onpointerup=w.onpointercancel=null;
- const tool=step.tool||'board';
- const stack=(G.stack||[]).slice(-10).join('');
- if(mode==='hold'){
-  w.innerHTML=`<div class="vessel" style="--liq:${step.c}"><div class="zone" style="bottom:${step.lo*100}%;height:${(step.hi-step.lo)*100}%"></div><div class="fill"></div></div><div class="stream" style="--liq:${step.c}"></div><div class="pourer">${step.i}</div><div class="fx"></div>`;
-  return;
- }
- w.innerHTML=`<div class="tool t-${tool}"></div><div class="stack">${stack}</div>`+
-  (mode==='cut'?'<div class="cutwrap"></div>':`<div class="item">${step.i}</div>`)+'<div class="fx"></div>';
-}
-
-function startStep(){
- if(G.i>=G.steps.length){finishDish();return;}
- G.phase='choose';G.act=null;
- const cur=G.steps[G.i];
- renderDots();
- $('#adultTag').hidden=true;
- document.querySelectorAll('.sq').forEach(e=>e.classList.remove('do'));
- const w=$('#work');
- if(!w.firstChild){setWork({tool:'board',i:''},'');}
- $('#q').textContent=G.i===0?'С чего начнём?':'Что делаем дальше?';
- const opts=choicesFor(G.i);
- $('#ctrl').innerHTML='';
- $('#choices').hidden=false;
- $('#choices').innerHTML=opts.map((s,k)=>`<button class="choice" data-k="${k}"><span class="ce">${s.i}</span><span>${label(s)}</span></button>`).join('');
- document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>pick(opts[+b.dataset.k],b,cur));
- setTip('Совет шефа',G.i===0?'Шеф всегда сначала думает, что за чем делать. Выбери первый шаг.':'Подумай, что должно случиться раньше: помыть, почистить, нарезать или приготовить?');
- speak(`${$('#q').textContent} ${opts.map(label).join('? ')}?`);
-}
-function choicesFor(i){
- const steps=G.steps,cur=steps[i],cand=[];
- for(let j=i+1;j<steps.length;j++){
-  const s=steps[j];
-  if(s.v===cur.v)continue;
-  if(cur.g&&s.g===cur.g)continue;
-  if(label(s)===label(cur)||cand.some(c=>label(c)===label(s)))continue;
-  cand.push(s);
- }
- const pickL=[];
- if(cand.length)pickL.push(cand[0]);
- const rest=shuffle(cand.slice(1));
- while(pickL.length<2&&rest.length)pickL.push(rest.pop());
- const pool=shuffle(FUN.slice());
- while(pickL.length<2)pickL.push(pool.pop());
- return shuffle([cur,...pickL]);
-}
-function pick(s,btn,cur){
- if(G.phase!=='choose'||btn.disabled)return;
- if(s===cur){
-  btn.classList.add('right');
-  document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
-  setTimeout(()=>beginDo(cur),350);
- }else{
-  btn.classList.add('wrong');btn.disabled=true;
-  G.mistakes++;updScore();
-  const msg=s.fun?`${s.fun} Сначала — «${label(cur)}».`:`«${label(s)}» — это позже. Сначала — «${label(cur)}». ${cur.why||'Шеф работает по порядку: так ничего не забудешь и не испортишь.'}`;
-  setTip('Не сейчас!',msg,true);
-  speak(msg);
-  say(actor()==='koko'?'oreo':'koko','Подожди-подожди!',1500);
- }
-}
-
-function beginDo(step){
- G.phase='do';
+/* ============ ОБЩЕЕ ============ */
+function chef(title,text,opt={}){
+ $('#cTitle').textContent=title;$('#cText').textContent=text;
+ const w=$('#cWhy');w.hidden=!opt.why;w.textContent=opt.why?'Почему так: '+opt.why:'';
+ $('#adult').hidden=!opt.adult;
+ const c=$('#chef');c.classList.toggle('oops',!!opt.oops);c.classList.toggle('yay',!!opt.yay);
  $('#choices').hidden=true;
- $('#q').textContent=label(step);
- $('#adultTag').hidden=!step.adult;
- const who=actor();
- document.getElementById(who).classList.add('do');
- say(who,label(step)+'!',1800);
- setTip('Совет шефа',step.tip||'Делаем аккуратно и не спешим.');
- speak(`${label(step)}. ${step.tip||''}`);
- const how=KIND_HOW[step.k];
- if(step.k==='rub')doRub(step,how);
- else if(step.k==='tap')doTap(step,how);
- else if(step.k==='cut')doCut(step,how);
- else if(step.k==='hold')doHold(step,how);
- else if(step.k==='time')doTime(step,how);
+ $('#actions').innerHTML='';
+ (opt.buttons||[]).forEach(b=>{const e=document.createElement('button');e.className=b.cls||'cta';e.textContent=b.t;e.onclick=b.on;if(b.id)e.id=b.id;$('#actions').appendChild(e);});
+ if(opt.say!==false)speak(title+'. '+text+(opt.why?' '+opt.why:''));
 }
-function stepDone(step){
- if(G.phase!=='do')return;
- G.phase='after';G.act=null;
- const who=actor();
- document.getElementById(who).classList.remove('do');
- say(who,pickOne(['Готово!','Получилось!','Как у шефа!','Ура!']),1400);
- if(['tap','cut','hold'].includes(step.k)||step.v==='Положить'){G.stack.push(step.i);}
- const it=$('#work .item');if(it)it.classList.add('wiggle');
- G.i++;
- setTimeout(()=>{if(G.phase==='after')startStep();},1300);
+function scene(name,dim){$('#bg').src=img(name);$('#stage').classList.toggle('dim',!!dim);$('#layer').innerHTML='';$('#fx').innerHTML='';}
+function dots(){
+ const n=STEPS.length+1;const cur=G.i<0?0:G.i+1;
+ $('#dots').innerHTML=Array.from({length:n},(_,k)=>`<i class="${k<cur?'d':k===cur?'c':''}"></i>`).join('');
+ $('#stepNo').textContent=G.i<0?'Продукты':`Шаг ${G.i+1} из ${STEPS.length}`;
+}
+function flash(t){const f=$('#flash');f.textContent=t;f.classList.add('on');clearTimeout(f._t);f._t=setTimeout(()=>f.classList.remove('on'),1500);}
+function stageXY(e){const r=$('#stage').getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];}
+function particle(x,y,kind){
+ const p=document.createElement('div');p.className='p';
+ const s=kind==='froth'?rnd(8,16):rnd(12,26);
+ p.style.width=p.style.height=s+'px';
+ p.style.background=kind==='froth'?'rgba(255,236,170,.9)':'rgba(255,255,255,.85)';
+ p.style.border=kind==='foam'?'2px solid rgba(160,210,240,.9)':'none';
+ p.style.left=x*100+'%';p.style.top=y*100+'%';
+ p.style.setProperty('--dx',rnd(-40,40)+'px');p.style.setProperty('--dy',rnd(-60,10)+'px');
+ $('#fx').appendChild(p);setTimeout(()=>p.remove(),950);
+}
+function ring(x,y){const r=document.createElement('div');r.className='ring';r.style.left=x*100+'%';r.style.top=y*100+'%';$('#fx').appendChild(r);setTimeout(()=>r.remove(),520);}
+
+/* ============ НАЧАЛО: КУХНЯ И ХОЛОДИЛЬНИК ============ */
+function start(mode){
+ Object.assign(G,{mode,phase:'kitchen',i:-1,taken:[],wrongFridge:0,mistakes:0,flySpoils:0,act:null});
+ G.flyPlan=mode==='learn'?{milk:1}:{[shuffle(['crack','salt','whisk'])[0]]:1,milk:Math.random()<.5?1:0};
+ $('#title').innerHTML=`Омлет<small>${mode==='learn'?'Учусь с шефом':'Готовлю сам'}</small>`;
+ show('game');dots();
+ scene('kitchen');
+ const h=document.createElement('button');h.className='hot';h.style.cssText='left:1%;top:4%;width:29%;height:88%';h.innerHTML='<span>Открыть холодильник</span>';h.onclick=openFridge;
+ $('#layer').appendChild(h);
+ if(mode==='learn')chef('Сегодня готовим омлет','Привет! Мы на кухне. Сначала соберём продукты. Где они хранятся? Правильно, в холодильнике. Нажми на холодильник и открой его.');
+ else chef('Готовишь сам','Сегодня я молчу и только подсказываю, если ошибёшься. Начни с продуктов: открой холодильник.');
+}
+function openFridge(){
+ G.phase='fridge';scene('fridge');
+ for(const it of FRIDGE){
+  const b=document.createElement('button');b.className='item';b.dataset.id=it.id;b.setAttribute('aria-label',it.name);
+  b.style.cssText=`left:${it.x*100}%;top:${it.y*100}%;width:${it.w*100}%`;
+  b.innerHTML=`<img src="${img('i-'+it.id)}" alt="">`;
+  b.onclick=()=>takeItem(it,b);
+  $('#layer').appendChild(b);
+ }
+ const tray=document.createElement('div');tray.className='tray';tray.innerHTML='<div class="slot">?</div><div class="slot">?</div><div class="slot">?</div>';$('#layer').appendChild(tray);
+ if(G.mode==='learn')chef('Что нужно для омлета?','Нам нужны три продукта: яйца, молоко и сливочное масло. Найди их на полках и возьми.',{why:'Соль хранится не в холодильнике, а на полке — она уже ждёт на столе.'});
+ else chef('Возьми продукты','Какие три продукта из холодильника нужны для омлета?');
+}
+function takeItem(it,b){
+ if(G.phase!=='fridge')return;
+ if(!it.need){
+  b.classList.remove('no');void b.offsetWidth;b.classList.add('no');G.wrongFridge++;
+  chef('Не то',it.no,{oops:true});return;
+ }
+ b.classList.add('taken');G.taken.push(it.id);
+ const slots=document.querySelectorAll('.tray .slot');const s=slots[G.taken.length-1];
+ s.classList.add('full');s.innerHTML=`<img src="${img('i-'+it.id)}" alt="">`;
+ if(G.taken.length<3){chef('Взяли: '+it.name,G.mode==='learn'?`Отлично! Осталось: ${FRIDGE.filter(f=>f.need&&!G.taken.includes(f.id)).map(f=>f.name).join(' и ')}.`:'Отлично. Что ещё?',{yay:true});return;}
+ G.phase='fridgeDone';
+ chef('Всё есть!','Яйца, молоко и масло у нас. Закрывай холодильник — холод бережёт продукты, дверцу долго не держим открытой.',{yay:true,buttons:[{t:'Закрыть холодильник',on:toTable}]});
+}
+function toTable(){
+ G.phase='table';scene('kitchen');
+ const put=[['eggs',.46,.76,.14],['milk',.58,.74,.055],['butter',.68,.77,.1],['salt',.38,.77,.08]];
+ put.forEach(([id,x,y,w],k)=>setTimeout(()=>{const d=document.createElement('div');d.className='onboard';d.style.cssText=`left:${x*100}%;top:${y*100}%;width:${w*100}%`;d.innerHTML=`<img src="${img('i-'+id)}" alt="">`;$('#layer').appendChild(d);},k*180));
+ if(G.mode==='learn')chef('Всё на столе','Продукты, соль, миска и сковорода — всё под рукой. Шефы всегда сначала всё раскладывают, а потом начинают. Теперь — по шагам. Я показываю, ты повторяешь.',{buttons:[{t:'Дальше',on:()=>nextStep()}]});
+ else chef('Всё на столе','Продукты готовы. Что делаешь первым?',{buttons:[{t:'Дальше',on:()=>nextStep()}]});
 }
 
-/* --- частицы --- */
-function particle(x,y,fx){
- const layer=$('#work .fx');if(!layer)return;
- const p=document.createElement('div');
- const cols=FXC[fx];
- if(fx==='crack'){p.className='p emo';p.textContent=pickOne(['🟡','💥','🤍']);}
- else if(fx==='salt'){p.className='p dot';p.style.width=p.style.height='5px';p.style.background='#fff';p.style.boxShadow='0 0 0 1px #ccc';}
- else if(fx==='steam'){p.className='p emo';p.textContent='💨';p.style.setProperty('--dy','-60px');}
- else if(fx==='drop'){p.className='p dot';p.style.background='#f5e04a';}
- else if(fx==='pluck'){p.className='p emo';p.textContent='🍃';p.style.setProperty('--dy','-50px');}
- else if(fx==='lid'||fx==='dip'||fx==='place'){p.className='p emo';p.textContent='✨';p.style.setProperty('--dy','-30px');}
- else if(cols){p.className='p '+(['peel','shred'].includes(fx)?'strip':'dot');p.style.background=pickOne(cols);if(fx==='bubble'){p.style.border='2px solid #9fd3f0';p.style.width=p.style.height='14px';p.style.setProperty('--dy','-40px');}}
- else {p.className='p emo';p.textContent='✨';}
- p.style.left=x+'px';p.style.top=y+'px';
- if(!p.style.getPropertyValue('--dx'))p.style.setProperty('--dx',rnd(-40,40)+'px');
- if(!p.style.getPropertyValue('--dy'))p.style.setProperty('--dy',rnd(20,60)+'px');
- p.style.setProperty('--r',rnd(-180,180)+'deg');
- layer.appendChild(p);setTimeout(()=>p.remove(),950);
+/* ============ ШАГИ ============ */
+function nextStep(){
+ G.i++;dots();
+ if(G.i>=STEPS.length){finish();return;}
+ if(G.mode==='learn')teach(STEPS[G.i]);else ask();
 }
-function workXY(e){const r=$('#work').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
-function centerXY(){const w=$('#work');return [w.clientWidth/2,w.clientHeight*.6];}
-
-/* --- тереть/мешать --- */
-function doRub(step,how){
- setWork(step,'');
- $('#ctrl').innerHTML=`<div class="howto">${how}</div><div class="meter"><i id="m"></i></div>`;
- const target=650*(step.n||1);let acc=0,last=null,since=0;
- const w=$('#work');
- const add=(d,x,y)=>{acc+=d;since+=d;
-  if(since>36){since=0;particle(x,y,step.fx);}
-  $('#m').style.width=Math.min(100,acc/target*100)+'%';
-  const it=$('#work .item');if(it){it.style.transform=`translate(-50%,-50%) rotate(${Math.sin(acc/40)*8}deg)`;}
-  if(acc>=target)stepDone(step);};
- w.onpointerdown=e=>{if(G.phase!=='do')return;last=workXY(e);try{w.setPointerCapture(e.pointerId);}catch(_){}add(55,...last);};
- w.onpointermove=e=>{if(!last||G.phase!=='do')return;const p=workXY(e);add(Math.min(60,Math.hypot(p[0]-last[0],p[1]-last[1])),...p);last=p;};
- w.onpointerup=w.onpointercancel=()=>{last=null;};
+function teach(s){
+ G.phase='show';scene(s.img,true);
+ chef(s.t,s.show,{why:s.why,adult:s.adult,buttons:[{t:'Моя очередь',on:()=>doStep(s)},{t:'🔊 Ещё раз',cls:'ghost',on:()=>speak(s.t+'. '+s.show)}]});
 }
-/* --- нажимать --- */
-function doTap(step,how){
- setWork(step,'');
- const n=step.n||1;let c=0;
- $('#ctrl').innerHTML=`<div class="howto">${how} — ${n} ${n===1?'раз':n<5?'раза':'раз'}</div><div class="taps">${'<i></i>'.repeat(n)}</div>`;
- const w=$('#work');
- w.onpointerdown=e=>{if(G.phase!=='do')return;
-  c++;const [x,y]=workXY(e);
-  for(let k=0;k<5;k++)particle(x,y,step.fx);
-  const it=$('#work .item');if(it){it.classList.remove('wiggle');void it.offsetWidth;it.classList.add('wiggle');}
-  if(['place','dip','drop','crack'].includes(step.fx)&&step.v!=='Посолить'){const s=$('#work .stack');if(s&&s.childNodes.length<14)s.insertAdjacentText('beforeend',step.fx==='crack'?'🍳':step.i);}
-  document.querySelectorAll('.taps i').forEach((d,k)=>d.classList.toggle('on',k<c));
-  if(c>=n)stepDone(step);};
-}
-/* --- резать --- */
-function doCut(step,how){
- setWork(step,'cut');
- const n=step.n||2;
- $('#ctrl').innerHTML=`<div class="howto">${how} — ${n} ${n===1?'разрез':n<5?'разреза':'разрезов'}</div><div class="taps">${'<i></i>'.repeat(n)}</div>`;
- const wrap=$('#work .cutwrap');
- const pos=[0];for(let j=0;j<n;j++)pos.push(.15+.7*(j+1)/(n+1));pos.push(1);
- let h='';
- for(let k=0;k<=n;k++)h+=`<div class="seg" data-k="${k}" style="clip-path:inset(0 ${(1-pos[k+1])*100}% 0 ${pos[k]*100}%)">${step.i}</div>`;
- for(let j=0;j<n;j++)h+=`<button class="cline" data-j="${j}" style="left:${pos[j+1]*100}%" aria-label="Разрез ${j+1}"></button>`;
- wrap.innerHTML=h;
- const cutSet=new Set();
- wrap.querySelectorAll('.cline').forEach(b=>b.onpointerdown=e=>{
-  e.stopPropagation();if(G.phase!=='do')return;
-  const j=+b.dataset.j;if(cutSet.has(j))return;cutSet.add(j);b.classList.add('cut');
-  const k=document.createElement('div');k.className='knife';k.textContent='🔪';k.style.left=b.style.left;wrap.appendChild(k);setTimeout(()=>k.remove(),400);
-  wrap.querySelectorAll('.seg').forEach(s=>{const sk=+s.dataset.k;let sh=0;cutSet.forEach(c=>{if(c<sk)sh++;});s.style.transform=`translateX(${(sh-cutSet.size/2)*7}px)`;});
-  document.querySelectorAll('.taps i').forEach((d,q)=>d.classList.toggle('on',q<cutSet.size));
-  if(cutSet.size>=n)setTimeout(()=>stepDone(step),250);
+function ask(){
+ G.phase='ask';const cur=STEPS[G.i];
+ scene(G.i?STEPS[G.i-1].img:'kitchen',true);
+ const later=STEPS.slice(G.i+1).filter(s=>s.t!==cur.t&&s.img!==cur.img);
+ const opts=[cur];
+ if(later.length)opts.push(later[0]);
+ const rest=shuffle(later.slice(1));if(rest.length&&opts.length<3)opts.push(rest[0]);
+ const fun=shuffle(FUN.slice());while(opts.length<3)opts.push(fun.pop());
+ shuffle(opts);
+ chef('Что дальше?','Выбери следующий шаг.',{say:false});
+ speak('Что дальше? '+opts.map(o=>o.t).join('? ')+'?');
+ const box=$('#choices');box.hidden=false;
+ box.innerHTML=opts.map((o,k)=>`<button class="choice" data-k="${k}">${o.img?`<img src="${img(o.img)}" alt="">`:`<div class="ph">${o.e}</div>`}<span>${o.t}</span></button>`).join('');
+ box.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+  const o=opts[+b.dataset.k];if(G.phase!=='ask'||b.disabled)return;
+  if(o===cur){b.classList.add('right');G.phase='go';setTimeout(()=>{scene(cur.img);chef(cur.t,cur.do,{adult:cur.adult});doStep(cur,true);},350);}
+  else{b.classList.add('wrong');b.disabled=true;G.mistakes++;
+   const m=o.msg||`«${o.t}» — позже. Сначала: «${cur.t}». ${cur.why}`;
+   $('#cTitle').textContent='Подсказка шефа';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);}
  });
 }
-/* --- лить --- */
-function doHold(step,how){
- setWork(step,'hold');
- $('#ctrl').innerHTML=`<div class="howto">${how}</div><button class="bigbtn" id="holdBtn">Держи — ${step.v.toLowerCase()}</button>`;
- const a=G.act={type:'hold',step,fill:0,on:false};
- const btn=$('#holdBtn');
- const down=e=>{e.preventDefault();if(G.phase!=='do')return;a.on=true;btn.classList.add('on');$('#work .pourer').classList.add('on');$('#work .stream').classList.add('on');try{btn.setPointerCapture(e.pointerId);}catch(_){}};
- const up=()=>{if(!a.on)return;a.on=false;btn.classList.remove('on');const p=$('#work .pourer');if(p)p.classList.remove('on');const s=$('#work .stream');if(s)s.classList.remove('on');judgeHold(a);};
- btn.onpointerdown=down;btn.onpointerup=up;btn.onpointercancel=up;btn.onlostpointercapture=up;
- btn.onkeydown=e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)down(e);};btn.onkeyup=e=>{if(e.key===' '||e.key==='Enter')up();};
- const w=$('#work');w.onpointerdown=down;w.onpointerup=up;w.onpointercancel=up;
+function doStep(s,keepChef){
+ G.phase='do';scene(s.img);
+ if(!keepChef)chef(s.t,s.do,{adult:s.adult});
+ if(G.flyPlan[s.id])setTimeout(()=>{if(G.phase==='do'&&STEPS[G.i]===s)spawnFly(s);},G.mode==='learn'?1600:rnd(1200,3500));
+ ({rub:doRub,tap:doTap,hold:doHold,time:doTime})[s.k](s);
 }
-function judgeHold(a){
- if(G.phase!=='do')return;
- const s=a.step;
- if(a.fill<s.lo){setTip('Ещё немного','Пока мало — подержи ещё, до зелёной полоски.');}
- else if(a.fill<=s.hi){stepDone(s);}
- else {spillHold(a,'Перелили! Лишнее не нужно — выливаем и пробуем снова. Лей медленно и смотри на полоску.');}
-}
-function spillHold(a,msg){a.fill=0;a.on=false;setTip('Ой, многовато',msg,true);speak(msg);const b=$('#holdBtn');if(b)b.classList.remove('on');const p=$('#work .pourer');if(p)p.classList.remove('on');const s=$('#work .stream');if(s)s.classList.remove('on');}
-/* --- готовить на огне --- */
-function doTime(step,how){
- setWork(step,'');
- const R0=.62,R1=.84;
- $('#ctrl').innerHTML=`<div class="howto">${how}</div><div class="tbar"><div class="zr" style="left:${R0*100}%;width:${(R1-R0)*100}%"></div><div class="zb" style="left:${R1*100}%"></div><div class="needle" id="needle"></div></div><div class="tlab"><span>${step.soft?'ждём':'сырое'}</span><span>готово</span><span>${step.soft?'':'слишком'}</span></div><button class="bigbtn go" id="timeBtn">${step.b}</button>`;
- if(step.soft)$('#ctrl .zb').style.display='none';
- if(step.tool==='oven')$('#work .tool').classList.add('hot');
- const a=G.act={type:'time',step,p:0,R0,R1};
- $('#timeBtn').onclick=()=>{
-  if(G.phase!=='do')return;
-  if(a.p<R0){const m='Рано — ещё не готово. Подожди, пока стрелка дойдёт до зелёного.';setTip('Подожди',m);speak(m);}
-  else if(a.p<=R1){stepDone(step);}
-  else burn(a);
- };
-}
-function burn(a){
- const m=a.step.late||'Подгорело! Шеф начинает этот шаг заново. Смотри на стрелку внимательнее.';
- a.p=0;setTip('Ой!',m,true);speak(m);
+function stepDone(s){
+ if(G.phase!=='do')return;G.phase='done';G.act=null;stopFly();
+ const praise=['Получилось!','Как у шефа!','Отлично!','Верно!'][Math.random()*4|0];
+ chef(praise,G.mode==='learn'?'Запомни этот шаг: «'+s.t+'».':'Следующий шаг!',{yay:true,say:false});speak(praise);
+ setTimeout(()=>{if(G.phase==='done')nextStep();},1200);
 }
 
-/* ================= ВРЕДИТЕЛИ ================= */
-const SPOIL={
- fly:['Муха села на еду! На лапках у мух микробы. Шефы накрывают еду крышкой или салфеткой.','Муха испачкала еду. Продукты на столе не оставляем открытыми.'],
- frog:['Лягушка прыгнула в молоко! Такое молоко пить нельзя — выливаем. Молоко держим закрытым и в холодильнике.','Плюх! Молоко испорчено. Открытый кувшин — приглашение для всех, кто прыгает и летает.'],
- cat:['Кот залез на стол! На лапках у него грязь с пола и из лотка. Стол протираем, а котика кормим из его миски.','Кот прошёлся по столу. Шерсть в еде — фу! Котам на кухонный стол нельзя.']
-};
-const SHOO={fly:['Кыш, муха!','Улетай!'],frog:['Не трогай молоко!','Квакай в пруду!'],cat:['Брысь со стола!','Котик, нельзя!']};
-function stageWH(){const s=$('#stage');return [s.clientWidth,s.clientHeight];}
-function clearPests(){for(const p of G.pests)p.el.remove();G.pests=[];document.querySelectorAll('.paws').forEach(e=>e.remove());}
-function spawnPest(){
- const lvl=G.dish.lvl;
- const has=t=>G.pests.some(p=>p.type===t);
- let opts=['fly','fly','frog','cat'];
- if(lvl===1)opts=['fly','fly','frog','cat'];
- opts=opts.filter(t=>t==='fly'?G.pests.filter(p=>p.type==='fly').length<2:!has(t));
- if(!opts.length)return;
- const type=pickOne(opts);
- const [W,H]=stageWH();
- const el=document.createElement('div');el.className='pest '+type;
- el.innerHTML=(type==='fly'?SVG_FLY:type==='frog'?SVG_FROG:SVG_CAT)+'<span class="hint" hidden></span>';
- $('#pests').appendChild(el);
- const p={type,el,state:'in',t:0,taps:0};
- if(type==='fly'){const left=Math.random()<.5;p.x=left?-50:W+10;p.y=rnd(H*.1,H*.35);p.tx=rnd(W*.25,W*.75);p.ty=rnd(H*.1,H*.45);p.hops=2;}
- if(type==='frog'){p.x=W+10;p.y=H*.62-50;p.sx=W*.86;}
- if(type==='cat'){p.x=rnd(W*.22,W*.58);p.y=H+10;}
- el.onpointerdown=e=>{e.stopPropagation();e.preventDefault();hitPest(p);};
- G.pests.push(p);place(p);
+/* тереть */
+function doRub(s){
+ const L=$('#layer');L.insertAdjacentHTML('beforeend','<div class="prog"><i></i></div>');
+ const target=(s.n||1)*1.6;let acc=0,last=null,since=0;
+ const st=$('#stage');
+ const add=(d,x,y)=>{acc+=d;since+=d;if(since>.05){since=0;particle(x,y,s.fx);}L.querySelector('.prog i').style.width=Math.min(100,acc/target*100)+'%';if(acc>=target)stepDone(s);};
+ st.onpointerdown=e=>{if(G.phase!=='do'||G.act)return;last=stageXY(e);try{st.setPointerCapture(e.pointerId);}catch(_){}add(.12,...last);};
+ st.onpointermove=e=>{if(!last||G.phase!=='do')return;const p=stageXY(e);add(Math.min(.15,Math.hypot(p[0]-last[0],p[1]-last[1])),...p);last=p;};
+ st.onpointerup=st.onpointercancel=()=>{last=null;};
 }
-function place(p){p.el.style.transform=`translate(${p.x}px,${p.y}px)`+(p.flip?' scaleX(-1)':'');}
-function hint(p,t){const h=p.el.querySelector('.hint');if(!h)return;h.hidden=!t;h.textContent=t||'';}
-function hitPest(p){
- if(p.state==='off'||p.state==='spoil')return;
- if(p.type==='cat'){
-  p.taps++;p.y+=46;
-  if(p.taps<2){hint(p,'Ещё раз!');say(pickOne(['koko','oreo']),pickOne(SHOO.cat),1200);return;}
- }
- p.state='off';p.t=0;hint(p,'');
- say(pickOne(['koko','oreo']),pickOne(SHOO[p.type]),1300);
- toast(pickOne(['Прогнали!','Молодец!','Еда в безопасности!']),true);
+/* нажимать */
+function doTap(s){
+ const L=$('#layer');L.insertAdjacentHTML('beforeend',`<div class="taps">${'<i></i>'.repeat(s.n)}</div>`);
+ let c=0;const st=$('#stage');
+ st.onpointerdown=e=>{if(G.phase!=='do'||G.act)return;c++;const [x,y]=stageXY(e);ring(x,y);for(let k=0;k<6;k++)particle(x,y,'froth');
+  L.querySelectorAll('.taps i').forEach((d,k)=>d.classList.toggle('on',k<c));if(c>=s.n)stepDone(s);};
+ st.onpointermove=st.onpointerup=null;
 }
-function workCenterStage(){const s=$('#stage').getBoundingClientRect(),w=$('#work').getBoundingClientRect();return [w.left-s.left+w.width/2,w.top-s.top+w.height*.6];}
-function jugTop(){const s=$('#stage').getBoundingClientRect(),j=$('#jug').getBoundingClientRect();return [j.left-s.left+j.width/2,j.top-s.top];}
-function spoil(p){
- G.spoils++;updScore();
- const m=pickOne(SPOIL[p.type]);
- toast(m,false);speak(m);
- say(pickOne(['koko','oreo']),'Ой-ой!',1300);
- if(p.type==='fly'){const it=$('#work .item');if(it){it.classList.add('germs');setTimeout(()=>it.classList.remove('germs'),2600);}}
- if(p.type==='frog'){const j=$('#jug');j.classList.add('bad','splash');setTimeout(()=>j.classList.remove('splash'),1300);setTimeout(()=>j.classList.remove('bad'),3500);}
- if(p.type==='cat'){const [W,H]=stageWH();for(let k=0;k<3;k++){const pw=document.createElement('div');pw.className='paws';pw.textContent='🐾';pw.style.left=(p.x+20+k*34)+'px';pw.style.top=(H*.66+k*8)+'px';$('#stage').appendChild(pw);setTimeout(()=>pw.style.opacity=0,3500);setTimeout(()=>pw.remove(),4600);}}
+/* лить */
+function doHold(s){
+ const st=$('#stage');st.onpointerdown=st.onpointermove=st.onpointerup=null;
+ $('#layer').insertAdjacentHTML('beforeend',`<div class="gauge"><div class="zone" style="bottom:${s.lo*100}%;height:${(s.hi-s.lo)*100}%"></div><div class="fill"></div></div>`);
+ const a=G.act={type:'hold',s,fill:0,on:false};
+ const b=document.createElement('button');b.className='hold';b.textContent='Держи — лить';$('#actions').appendChild(b);
+ const down=e=>{e.preventDefault();if(G.phase!=='do')return;a.on=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId);}catch(_){}};
+ const up=()=>{if(!a.on)return;a.on=false;b.classList.remove('on');
+  if(a.fill<s.lo){$('#cText').textContent='Пока мало — подержи ещё, до зелёной полоски.';}
+  else if(a.fill<=s.hi)stepDone(s);
+  else spill(a,'Перелили! Лишнее молоко сделает омлет водянистым. Начнём сначала — лей медленно.');};
+ b.onpointerdown=down;b.onpointerup=up;b.onpointercancel=up;b.onlostpointercapture=up;
+ b.onkeydown=e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)down(e);};b.onkeyup=e=>{if(e.key===' '||e.key==='Enter')up();};
 }
-let toastT;
-function toast(t,good){const e=$('#toast');e.textContent=t;e.classList.toggle('good',!!good);e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),good?1100:3800);}
-function updPest(p,dt){
- const [W,H]=stageWH();p.t+=dt;
- if(p.type==='fly'){
-  if(p.state==='off'){p.y-=420*dt;p.x+=(p.x<W/2?-260:260)*dt;}
-  else if(p.state==='land'){p.x=p.lx+Math.sin(p.t*30)*1.5;hint(p,'ж-ж-ж… '+Math.max(0,Math.ceil(4-p.t)));if(p.t>4){p.state='spoil';spoil(p);hint(p,'');p.state='off';p.t=0;}}
-  else{
-   const dx=p.tx-p.x,dy=p.ty-p.y,d=Math.hypot(dx,dy);const sp=170;
-   p.x+=dx/d*sp*dt+Math.sin(p.t*9)*2;p.y+=dy/d*sp*dt+Math.cos(p.t*7)*2;p.flip=dx<0;
-   if(d<8){
-    if(p.hops>0){p.hops--;p.tx=rnd(W*.2,W*.8);p.ty=rnd(H*.08,H*.45);}
-    else if(p.state==='in'){const [cx,cy]=workCenterStage();p.state='go';p.tx=cx-26+rnd(-30,30);p.ty=cy-30+rnd(-20,10);}
-    else if(p.state==='go'){p.state='land';p.t=0;p.lx=p.x;}
-   }
-  }
-  if(p.state==='off'&&(p.y<-80||p.x<-80||p.x>W+80))p.dead=true;
- }
- if(p.type==='frog'){
-  const fy=H*.62-50;
-  if(p.state==='in'){p.x-=140*dt;p.y=fy-Math.abs(Math.sin(p.t*7))*22;if(p.x<=p.sx){p.state='sit';p.t=0;p.y=fy;}}
-  else if(p.state==='sit'){hint(p,'Ква? '+Math.max(0,Math.ceil(2.8-p.t)));p.el.style.transform=`translate(${p.x}px,${p.y+Math.sin(p.t*14)*2}px)`;if(p.t>2.8){const [jx,jy]=jugTop();p.state='jump';p.t=0;p.x0=p.x;p.y0=p.y;p.x1=jx-37;p.y1=jy-36;hint(p,'');}return;}
-  else if(p.state==='jump'){const k=Math.min(1,p.t/.8);p.x=p.x0+(p.x1-p.x0)*k;p.y=p.y0+(p.y1-p.y0)*k-Math.sin(k*Math.PI)*90;if(k>=1){spoil(p);p.state='inmilk';p.t=0;}}
-  else if(p.state==='inmilk'){if(p.t>1.2){p.state='off';p.t=0;}}
-  else if(p.state==='off'){p.x+=240*dt;p.y=fy-Math.abs(Math.sin(p.t*8))*20;}
-  if(p.state==='off'&&p.x>W+90)p.dead=true;
- }
- if(p.type==='cat'){
-  const top=H*.62-p.el.clientHeight*.62;
-  if(p.state==='in'){p.y-=(H*.4/5)*dt;hint(p,p.taps?'Ещё раз!':'Мяу!');if(p.y<=top){p.y=top;p.state='spoil';p.t=0;hint(p,'');spoil(p);}}
-  else if(p.state==='spoil'){if(p.t>1.3){p.state='off';p.t=0;}}
-  else if(p.state==='off'){p.y+=360*dt;if(p.y>H+20)p.dead=true;}
- }
- place(p);
+function spill(a,m){a.fill=0;a.on=false;$('#cTitle').textContent='Ой, многовато';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);}
+/* жарить */
+function doTime(s){
+ const st=$('#stage');st.onpointerdown=st.onpointermove=st.onpointerup=null;
+ const R0=.6,R1=.82;
+ $('#layer').insertAdjacentHTML('beforeend',`<div class="tgauge"><div class="zr" style="left:${R0*100}%;width:${(R1-R0)*100}%"></div><div class="zb" style="left:${R1*100}%"></div><div class="needle"></div></div>`);
+ const a=G.act={type:'time',s,p:0,R0,R1};
+ const b=document.createElement('button');b.className='cta';b.textContent='Готово!';$('#actions').appendChild(b);
+ b.onclick=()=>{if(G.phase!=='do')return;
+  if(a.p<R0){$('#cText').textContent='Рано — омлет ещё жидкий сверху. Подожди, пока стрелка дойдёт до зелёного.';speak('Рано, подожди.');}
+  else if(a.p<=R1)stepDone(s);else burn(a);};
+}
+function burn(a){a.p=0;$('#cTitle').textContent='Ой!';$('#cText').textContent=a.s.late;$('#chef').classList.add('oops');speak(a.s.late);}
+
+/* ============ МУХА ============ */
+function spawnFly(s){
+ if(G.fly)return;
+ const [tx,ty]=BOWL[s.id]||[.5,.6];
+ const el=document.createElement('div');el.className='fly';el.innerHTML='<img src="art/i-fly.webp" alt="Муха"><b hidden></b>';
+ $('#stage').appendChild(el);
+ const f=G.fly={el,x:-.1,y:.15,tx,ty,state:'in',t:0};
+ el.onpointerdown=e=>{e.stopPropagation();e.preventDefault();if(f.state==='off')return;f.state='off';f.t=0;flash('Кыш! Еда в безопасности');
+  if(G.mode==='learn'&&!G.flyTaught){G.flyTaught=1;}};
+ if(G.mode==='learn'){flash('Муха! Нажми на неё, чтобы прогнать');speak('Ой, муха! Нажми на неё, чтобы прогнать.');}
+}
+function stopFly(){if(G.fly){G.fly.el.remove();G.fly=null;}}
+function updFly(dt){
+ const f=G.fly;if(!f)return;const st=$('#stage');const W=st.clientWidth,H=st.clientHeight;f.t+=dt;
+ if(f.state==='in'){const dx=f.tx-f.x,dy=f.ty-f.y,d=Math.hypot(dx,dy);const sp=.28*dt;
+  if(d<.01){f.state='land';f.t=0;}else{f.x+=dx/d*Math.min(sp,d)+Math.sin(f.t*12)*.004;f.y+=dy/d*Math.min(sp,d)+Math.cos(f.t*9)*.004;}}
+ else if(f.state==='land'){const left=Math.max(0,Math.ceil(4-f.t));const b=f.el.querySelector('b');b.hidden=false;b.textContent='ж-ж… '+left;
+  if(f.t>4){G.flySpoils++;const m=SPOILS[G.flySpoils%2];flash('Муха испачкала еду');$('#cTitle').textContent='Муха в миске!';$('#cText').textContent=m;$('#chef').classList.add('oops');speak(m);f.state='off';f.t=0;}}
+ else if(f.state==='off'){f.el.querySelector('b').hidden=true;f.y-=.9*dt;f.x+=.6*dt;if(f.y<-.2){stopFly();return;}}
+ f.el.style.transform=`translate(${f.x*W-f.el.clientWidth/2}px,${f.y*H-f.el.clientHeight/2}px) rotate(${f.state==='land'?0:Math.sin(f.t*20)*12}deg)`;
 }
 
-/* ================= ЦИКЛ ================= */
+/* ============ ЦИКЛ ============ */
 let lastT=performance.now();
 function loop(now){
  const dt=Math.min(.05,(now-lastT)/1000);lastT=now;
- if(G.running&&!document.hidden&&$('#game').hidden===false){
-  G.spawnT-=dt;
-  const lvl=G.dish.lvl,maxP=[0,1,2,2,3][lvl];
-  if(G.spawnT<=0){if(G.pests.length<maxP&&G.phase!=='finished')spawnPest();G.spawnT=[0,11,9,7.5,6.5][lvl]+rnd(-2,2);}
-  for(const p of G.pests)updPest(p,dt);
-  G.pests=G.pests.filter(p=>{if(p.dead)p.el.remove();return !p.dead;});
+ if(!$('#game').hidden&&!document.hidden){
+  updFly(dt);
   const a=G.act;
   if(a&&G.phase==='do'){
-   if(a.type==='hold'){
-    if(a.on){a.fill+=dt*.3;if(a.fill>=1)spillHold(a,'Перелилось через край! Вытираем и наливаем снова — медленнее.');}
-    const f=$('#work .fill');if(f)f.style.height=Math.min(100,a.fill*100)+'%';
-   }
-   if(a.type==='time'){
-    a.p+=dt/a.step.dur;
-    if(a.step.soft&&a.p>a.R1-.02)a.p=a.R1-.02;
-    if(a.p>=1)burn(a);
-    const n=$('#needle');if(n)n.style.left=(a.p*100)+'%';
-    const it=$('#work .item');
-    if(it){const c=Math.min(1,a.p);it.style.filter=a.step.soft?'':`sepia(${c*.7}) saturate(${1+c*.6}) brightness(${1-Math.max(0,c-.84)*2.5})`;}
-    if(Math.random()<dt*6){const [x,y]=centerXY();particle(x+rnd(-40,40),y-20,a.step.tool==='pot'||a.step.tool==='blender'?'bubble':'steam');}
-   }
+   if(a.type==='hold'){if(a.on){a.fill+=dt*.28;if(Math.random()<dt*20)particle(rnd(.45,.6),rnd(.6,.75),'foam');if(a.fill>=1)spill(a,'Перелилось через край! Вытираем и наливаем снова — медленнее.');}
+    const f=$('#layer .fill');if(f)f.style.height=Math.min(100,a.fill*100)+'%';}
+   if(a.type==='time'){a.p+=dt/a.s.dur;if(a.p>=1)burn(a);
+    const n=$('#layer .needle');if(n)n.style.left=a.p*100+'%';
+    const c=Math.min(1,a.p);$('#bg').style.filter=`saturate(${.45+c*.75}) brightness(${1.12-c*.12-Math.max(0,c-.82)*1.6}) sepia(${Math.max(0,c-.82)*2})`;
+    if(Math.random()<dt*8)particle(rnd(.35,.65),rnd(.3,.5),'foam');}
   }
  }
  requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
 
-/* ================= ФИНАЛ ================= */
-function finishDish(){
- G.phase='finished';G.running=false;
- setTimeout(()=>{clearPests();},50);
- const d=G.dish;
- const stars=1+(G.mistakes<=1?1:0)+(G.spoils<=1?1:0);
- SAVE.stars[d.id]=Math.max(SAVE.stars[d.id]||0,stars);persist();
- $('#dnIcon').textContent=d.icon;$('#dnName').textContent=d.name+' — готово!';
- $('#dnNuts').innerHTML=nutsHTML(stars);
- $('#dnStats').innerHTML=`<span class="pill">🌰 приготовили</span><span class="pill">${G.mistakes<=1?'🌰':'—'} ошибок порядка: ${G.mistakes}</span><span class="pill">${G.spoils<=1?'🌰':'—'} испорчено: ${G.spoils}</span>`;
- $('#dnSheet').innerHTML=G.steps.map(s=>`<li><b>${s.i} ${label(s)}</b>${s.adult?' <span class="tag" style="display:inline">со взрослым</span>':''}<span>${s.tip||''}</span></li>`).join('');
- const nx=G.dishIdx+1;
- $('#nextBtn').hidden=nx>=DISHES.length;
- $('#nextBtn').onclick=()=>openIntro(nx);
- $('#againBtn').onclick=()=>openIntro(G.dishIdx);
- show('done');
- speak(`${d.name} готово! ${stars===3?'Три орешка! Ты настоящий шеф!':stars===2?'Два орешка! Отлично!':'Один орешек. В следующий раз будет лучше!'}`);
+/* ============ ФИНАЛ ============ */
+function finish(){
+ G.phase='finished';stopFly();$('#bg').style.filter='';
+ let stars=0,text;
+ if(G.mode==='learn'){SAVE.learned=true;persist();text='Урок пройден! Ты знаешь, как готовить омлет. Теперь попробуй приготовить его сам — без подсказок.';}
+ else{stars=1+(G.mistakes<=1?1:0)+(G.wrongFridge+G.flySpoils<=1?1:0);SAVE.stars=Math.max(SAVE.stars,stars);persist();
+  text=`Ошибок в порядке: ${G.mistakes}. Лишних продуктов: ${G.wrongFridge}. Муха испортила еду: ${G.flySpoils} раз.`;}
+ $('#fTitle').textContent=G.mode==='learn'?'Омлет готов!':'Омлет готов — без подсказок!';
+ $('#fStars').innerHTML=G.mode==='solo'?starsHTML(stars):'';
+ $('#fText').textContent=text;
+ const fa=$('#fActions');fa.innerHTML='';
+ const mk=(t,cls,on)=>{const b=document.createElement('button');b.className=cls;b.textContent=t;b.onclick=on;fa.appendChild(b);};
+ if(G.mode==='learn')mk('Готовлю сам','cta',()=>start('solo'));else mk('Ещё раз','cta',()=>start('solo'));
+ mk('В меню','ghost',menu);
+ $('#sheet').innerHTML='<li><img src="art/fridge.webp" alt=""><div><b>Достать продукты</b><span>2 яйца, молоко, сливочное масло из холодильника. Соль — с полки.</span></div></li>'+
+  STEPS.map(s=>`<li><img src="${img(s.img)}" alt=""><div><b>${s.t}</b>${s.adult?' <span style="display:inline;color:#8a5a00">· со взрослым</span>':''}<span>${s.show}</span></div></li>`).join('');
+ show('final');
+ speak($('#fTitle').textContent+' '+text);
 }
 
-$('#sayBtn').onclick=()=>speak($('#tip').textContent);
-setVoiceBtn();
-renderMenu();
+setVoice();menu();
 window.__g=G;
 </script>
 </body>
